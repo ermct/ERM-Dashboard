@@ -1,0 +1,1820 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PTI ERM — External Risk Intelligence Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#EAF2F5;
+    --ink-dim:#9FB6C4;
+    --ink-faint:#6E8494;
+    --hull:#0A1B28;
+    --deck:#0F2536;
+    --panel:#132C40;
+    --panel-line:#25445C;
+    --panel-line-soft:#1C374A;
+    --signal-amber:#E3A13B;
+    --signal-red:#C7472E;
+    --signal-teal:#3FA79A;
+    --signal-green:#4E9A6E;
+    --signal-blue:#4C86C7;
+    --level-1:#1B3A52;
+    --level-2:#2A5678;
+    --level-3:#3D76A0;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--hull); color:var(--ink);
+    font-family:'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif; line-height:1.5;
+  }
+  
+  /* ===== Sticky Header & Navigation ===== */
+  header.app-header{
+    position:sticky; top:0; z-index:100;
+    background:rgba(10, 27, 40, 0.95);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--panel-line);
+    padding:0 20px;
+  }
+  .header-inner{
+    max-width:1200px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; height:62px; gap:16px;
+  }
+  .brand-area{display:flex; align-items:center; gap:12px;}
+  .brand-logo{
+    width:32px; height:32px; border-radius:6px; background:linear-gradient(135deg, var(--signal-teal), var(--signal-blue));
+    display:flex; align-items:center; justify-content:center; font-weight:700; font-family:'Space Grotesk'; font-size:14px; color:#fff;
+  }
+  .brand-title{font-family:'Space Grotesk'; font-weight:700; font-size:15px; letter-spacing:.02em; color:var(--ink); line-height:1.2;}
+  .brand-sub{font-size:11px; color:var(--signal-teal); text-transform:uppercase; letter-spacing:.05em;}
+
+  .nav-tabs{display:flex; gap:4px; height:100%; overflow-x:auto; scrollbar-width:none;}
+  .nav-tabs::-webkit-scrollbar{display:none;}
+  .nav-btn{
+    background:transparent; border:none; color:var(--ink-dim); padding:0 14px; font-family:'IBM Plex Sans';
+    font-size:12.5px; font-weight:500; cursor:pointer; display:flex; align-items:center; gap:6px; white-space:nowrap;
+    border-bottom:2px solid transparent; transition:all .15s ease;
+  }
+  .nav-btn:hover{color:var(--ink); background:rgba(255,255,255,.02);}
+  .nav-btn.active{color:var(--signal-teal); border-bottom-color:var(--signal-teal); font-weight:600;}
+  .nav-btn .badge-count{
+    background:var(--panel-line); color:var(--ink); font-size:10px; padding:1px 6px; border-radius:10px; font-family:'Space Grotesk';
+  }
+  .nav-btn.active .badge-count{background:var(--signal-teal); color:#0A1B28; font-weight:700;}
+
+  .header-actions{display:flex; align-items:center; gap:12px;}
+  
+  /* Update Status Badge */
+  .update-status{
+    background:rgba(227,161,59,.1); border:1px solid rgba(227,161,59,.3); color:var(--signal-amber); padding:6px 12px;
+    border-radius:20px; font-size:11px; font-weight:600; font-family:'Space Grotesk';
+    display:flex; align-items:center; gap:6px;
+  }
+  .update-status .status-dot{
+    width:6px; height:6px; border-radius:50%; background:var(--signal-amber);
+  }
+
+  .lang-toggle{
+    display:inline-flex; background:var(--deck); border:1px solid var(--panel-line); border-radius:20px; padding:2px;
+  }
+  .lang-btn{
+    background:transparent; border:none; color:var(--ink-faint); padding:3px 10px; font-size:11px; font-weight:600;
+    border-radius:16px; cursor:pointer; transition:all .15s ease; font-family:'Space Grotesk';
+  }
+  .lang-btn.active{background:var(--signal-teal); color:#0A1B28;}
+
+  .wrap{max-width:1200px; margin:0 auto; padding:24px 20px 60px;}
+
+  /* ===== View Visibility ===== */
+  .view-pane{display:none;}
+  .view-pane.active{display:block;}
+
+
+
+  /* ===== Tooltip / info-icon system ===== */
+  .tip-wrap{position:relative; display:inline-flex; align-items:center; gap:5px;}
+  .info-icon{
+    width:14px;height:14px;border-radius:50%;border:1px solid var(--ink-faint);
+    font-size:9px; display:inline-flex; align-items:center; justify-content:center;
+    color:var(--ink-faint); cursor:help; flex-shrink:0; font-family:'IBM Plex Sans';
+  }
+  .tip-bubble{
+    position:absolute; bottom:calc(100% + 9px); left:50%; transform:translateX(-50%);
+    background:#0D2131; border:1px solid var(--panel-line); border-radius:5px; padding:10px 13px;
+    font-size:11.5px; line-height:1.5; color:var(--ink-dim); width:240px;
+    opacity:0; visibility:hidden; transition:opacity .12s ease; z-index:80; pointer-events:none;
+    box-shadow:0 10px 28px rgba(0,0,0,.4); text-align:left; font-weight:normal;
+  }
+  .tip-bubble b{color:var(--ink); font-weight:600;}
+  .tip-bubble::after{
+    content:''; position:absolute; top:100%; left:50%; transform:translateX(-50%);
+    border:6px solid transparent; border-top-color:var(--panel-line);
+  }
+  .tip-wrap:hover .tip-bubble, .tip-wrap.show .tip-bubble{opacity:1; visibility:visible; pointer-events:auto;}
+  .tip-wrap.right .tip-bubble{left:auto; right:0; transform:translateX(0);}
+  .tip-wrap.right .tip-bubble::after{left:auto; right:10px; transform:translateX(0);}
+
+  /* ===== Masthead Banner ===== */
+  .masthead{
+    display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:16px;
+    border-bottom:1px solid var(--panel-line); padding-bottom:18px; margin-bottom:20px;
+  }
+  .masthead .brand{font-size:12px; letter-spacing:.06em; color:var(--signal-teal); margin-bottom:4px; text-transform:uppercase; font-weight:600;}
+  .masthead h1{font-size:24px; font-weight:600; color:var(--ink);}
+  .masthead .sub{color:var(--ink-dim); font-size:13px; margin-top:3px;}
+  .meta-block{font-size:12px; color:var(--ink-dim); text-align:right;}
+  .meta-block .row{margin-bottom:2px;}
+  .meta-block .row span{color:var(--ink);}
+
+  /* ===== TODAY'S INTELLIGENCE SPOTLIGHT (REVISION-01) ===== */
+  .spotlight-box{
+    background:linear-gradient(180deg, var(--panel), var(--deck));
+    border:1px solid var(--panel-line); border-radius:6px; padding:20px; margin-bottom:24px;
+  }
+  .spotlight-header{
+    display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--panel-line-soft);
+    padding-bottom:10px; margin-bottom:14px;
+  }
+  .spotlight-title{
+    font-family:'Space Grotesk'; font-size:13px; font-weight:700; letter-spacing:.05em; color:var(--signal-teal); text-transform:uppercase;
+    display:flex; align-items:center; gap:8px;
+  }
+  .spotlight-title::before{content:''; width:8px; height:8px; border-radius:50%; background:var(--signal-teal);}
+  .spotlight-grid{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+  .spot-card{
+    background:rgba(13, 33, 49, 0.6); border:1px solid var(--panel-line-soft); border-radius:6px; padding:14px 16px;
+  }
+  .spot-card.high{border-left:3px solid var(--signal-red);}
+  .spot-card.monitor{border-left:3px solid var(--signal-amber);}
+  .spot-head{
+    font-family:'Space Grotesk'; font-size:12px; font-weight:700; margin-bottom:8px; display:flex; align-items:center; gap:6px;
+  }
+  .spot-card.high .spot-head{color:#E8896F;}
+  .spot-card.monitor .spot-head{color:var(--signal-amber);}
+  .spot-list{margin:0; padding-left:18px; font-size:12.5px; color:var(--ink-dim);}
+  .spot-list li{margin-bottom:6px; line-height:1.45;}
+  .spot-list li strong{color:var(--ink);}
+
+  .section-label{
+    font-size:12px; letter-spacing:.04em; color:var(--signal-teal); margin-bottom:12px;
+    display:flex; align-items:center; gap:8px; text-transform:uppercase; font-weight:600;
+  }
+  .section-label::before{content:''; width:14px; height:1px; background:var(--signal-teal); display:inline-block;}
+
+  /* ===== KPI cards ===== */
+  .kpi-grid{display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin-bottom:28px;}
+  .kpi{
+    background:var(--panel); border:1px solid var(--panel-line); border-radius:6px;
+    padding:16px 14px; position:relative; cursor:pointer; transition:transform .15s ease, border-color .15s ease;
+  }
+  .kpi:hover{transform:translateY(-2px); border-color:var(--signal-teal);}
+  .kpi .num{font-family:'Space Grotesk'; font-size:32px; font-weight:600; line-height:1;}
+  .kpi .label{font-size:11.5px; color:var(--ink-dim); margin-top:8px; display:flex; align-items:center; gap:5px; font-weight:500;}
+  .kpi .snapshot-note{font-size:10px; color:var(--ink-faint); margin-top:8px; font-style:italic;}
+  .kpi.high{border-left:4px solid var(--signal-red);}
+  .kpi.high .num{color:var(--signal-red);}
+  .kpi.monitor{border-left:4px solid var(--signal-amber);}
+  .kpi.monitor .num{color:var(--signal-amber);}
+  .kpi.background{border-left:4px solid var(--ink-faint);}
+  .kpi.background .num{color:var(--ink-dim);}
+  .kpi.total{border-left:4px solid var(--signal-teal);}
+  .kpi.total .num{color:var(--signal-teal);}
+  .kpi.info{border-left:4px solid var(--signal-blue);}
+  .kpi.info .num{color:var(--signal-blue);}
+
+  /* ===== Grid Layouts ===== */
+  .grid2{display:grid; grid-template-columns:1.15fr .85fr; gap:20px; margin-bottom:28px; align-items:start;}
+  .panel{background:var(--panel); border:1px solid var(--panel-line); border-radius:6px; padding:20px;}
+  .panel h3{font-size:15px; font-weight:600; margin-bottom:14px; font-family:'Space Grotesk';}
+
+  /* ===== Heatmap ===== */
+  .heatmap-grid{display:grid; grid-template-columns:76px repeat(3,1fr); gap:6px;}
+  .hx-axis{font-size:10.5px; color:var(--ink-faint); text-align:center; padding:6px 2px; letter-spacing:.02em; font-weight:500;}
+  .hy-axis{font-size:10.5px; color:var(--ink-faint); display:flex; align-items:center; justify-content:flex-end; padding-right:8px; text-align:right; line-height:1.3; font-weight:500;}
+  .hcell{
+    border-radius:4px; min-height:76px; padding:8px; position:relative;
+    display:flex; flex-direction:column; gap:5px; cursor:default;
+    border:1px solid var(--panel-line-soft);
+  }
+  .hcell.i-hi.e-lo{background:rgba(227,161,59,.16);}
+  .hcell.i-hi.e-md{background:rgba(199,71,46,.22);}
+  .hcell.i-hi.e-hi{background:rgba(199,71,46,.34);}
+  .hcell.i-md.e-lo{background:rgba(63,167,154,.14);}
+  .hcell.i-md.e-md{background:rgba(227,161,59,.20);}
+  .hcell.i-md.e-hi{background:rgba(199,71,46,.24);}
+  .hcell.i-lo.e-lo{background:rgba(63,167,154,.08);}
+  .hcell.i-lo.e-md{background:rgba(63,167,154,.10);}
+  .hcell.i-lo.e-hi{background:rgba(227,161,59,.10);}
+  .chip{
+    display:inline-flex; align-items:center; gap:5px; background:#0D2131; border:1px solid var(--panel-line);
+    border-radius:20px; padding:3px 9px 3px 6px; font-size:10.5px; color:var(--ink); cursor:pointer;
+    transition:border-color .12s ease, transform .12s ease; width:fit-content;
+  }
+  .chip:hover{border-color:var(--signal-teal); transform:translateY(-1px);}
+  .chip .n{
+    width:15px;height:15px;border-radius:50%; background:var(--panel-line); font-size:9px; font-weight:700;
+    display:flex; align-items:center; justify-content:center; flex-shrink:0; color:var(--signal-teal);
+  }
+  .legend{display:flex; gap:16px; margin-top:14px; flex-wrap:wrap; font-size:11px; color:var(--ink-dim);}
+  .legend .lg{display:flex; align-items:center; gap:6px;}
+  .legend .sw{width:11px;height:11px;border-radius:3px;}
+
+  /* ===== Trend list ===== */
+  .trend-title-row{display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;}
+  .trend-list{display:flex; flex-direction:column;}
+  .trend-row{
+    display:flex; justify-content:space-between; align-items:center; padding:11px 0;
+    border-bottom:1px solid var(--panel-line-soft);
+  }
+  .trend-row:last-child{border-bottom:none;}
+  .trend-row .name{font-size:13px; max-width:62%; color:var(--ink-dim);}
+  .trend-tag{
+    font-family:'Space Grotesk'; font-weight:600; font-size:11.5px; display:inline-flex; align-items:center; gap:6px;
+    padding:4px 10px; border-radius:20px; border:1px solid transparent;
+  }
+  .trend-tag.up{color:#E8896F; background:rgba(199,71,46,.14); border-color:rgba(199,71,46,.3);}
+  .trend-tag.down{color:#7FC79E; background:rgba(78,154,110,.14); border-color:rgba(78,154,110,.3);}
+  .trend-tag.stable{color:#8FB6E5; background:rgba(76,134,199,.14); border-color:rgba(76,134,199,.3);}
+  .trend-tag.seasonal{color:#5FC2B8; background:rgba(63,167,154,.14); border-color:rgba(63,167,154,.3);}
+  .trend-tag.uncertain{color:var(--ink-dim); background:rgba(158,182,196,.1); border-color:var(--panel-line);}
+
+  /* ===== Status / level badges ===== */
+  .badge-status{
+    display:inline-flex; align-items:center; gap:6px; padding:3px 10px; border-radius:20px;
+    font-size:10.5px; font-weight:600; letter-spacing:.01em; white-space:nowrap;
+  }
+  .badge-status .dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+  .badge-status.high{background:rgba(199,71,46,.16); color:#E8896F; border:1px solid rgba(199,71,46,.35);}
+  .badge-status.high .dot{background:var(--signal-red);}
+  .badge-status.monitor{background:rgba(227,161,59,.16); color:var(--signal-amber); border:1px solid rgba(227,161,59,.35);}
+  .badge-status.monitor .dot{background:var(--signal-amber);}
+  .badge-status.background{background:rgba(158,182,196,.1); color:var(--ink-dim); border:1px solid var(--panel-line);}
+  .badge-status.background .dot{background:var(--ink-faint);}
+
+  .badge-level{
+    display:inline-flex; align-items:center; gap:5px; padding:3px 9px; border-radius:4px;
+    font-size:10.5px; font-weight:600; white-space:nowrap; border:1px solid var(--panel-line);
+  }
+  .badge-level .bars{display:flex; gap:2px; align-items:flex-end;}
+  .badge-level .bars i{display:block; width:3px; background:var(--panel-line); border-radius:1px;}
+  .badge-level .bars i:nth-child(1){height:5px;}
+  .badge-level .bars i:nth-child(2){height:8px;}
+  .badge-level .bars i:nth-child(3){height:11px;}
+  .badge-level.lvl-high{color:#BFDAF7; background:rgba(76,134,199,.14);}
+  .badge-level.lvl-high .bars i{background:var(--signal-blue);}
+  .badge-level.lvl-medium{color:#9FC3E8; background:rgba(76,134,199,.08);}
+  .badge-level.lvl-medium .bars i:nth-child(1),.badge-level.lvl-medium .bars i:nth-child(2){background:var(--signal-blue);}
+  .badge-level.lvl-low{color:var(--ink-dim); background:rgba(158,182,196,.06);}
+  .badge-level.lvl-low .bars i:nth-child(1){background:var(--signal-blue);}
+
+  .trend-arrow{font-family:'Space Grotesk'; font-weight:700; font-size:14px; display:inline-flex; align-items:center; gap:5px;}
+  .trend-arrow.up{color:var(--signal-red);}
+  .trend-arrow.down{color:var(--signal-green);}
+  .trend-arrow.stable{color:var(--signal-blue);}
+  .trend-arrow.uncertain{color:var(--ink-dim);}
+
+  /* ===== Filter Bar ===== */
+  .filter-bar{
+    display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:16px; flex-wrap:wrap;
+  }
+  .filter-group{display:flex; gap:8px; align-items:center; flex-wrap:wrap;}
+  .filter-btn{
+    background:var(--deck); border:1px solid var(--panel-line); color:var(--ink-dim); font-size:11.5px;
+    padding:5px 12px; border-radius:20px; cursor:pointer; transition:all .15s ease; font-family:'IBM Plex Sans';
+  }
+  .filter-btn:hover{color:var(--ink); border-color:var(--ink-faint);}
+  .filter-btn.active{background:var(--signal-teal); color:#0A1B28; font-weight:600; border-color:var(--signal-teal);}
+
+  /* ===== Tables ===== */
+  .table-scroll{overflow-x:auto; -webkit-overflow-scrolling:touch; border-radius:5px;}
+  .scroll-hint{display:none; font-size:10.5px; color:var(--ink-faint); margin-bottom:8px;}
+  table{width:100%; border-collapse:collapse; font-size:12.5px; min-width:640px;}
+  th{
+    text-align:left; font-weight:600; color:var(--ink-dim); font-size:10.5px; letter-spacing:.03em;
+    padding:10px 12px; border-bottom:1px solid var(--panel-line); text-transform:uppercase; white-space:nowrap;
+    background:rgba(0,0,0,.15);
+  }
+  td{padding:12px 12px; border-bottom:1px solid var(--panel-line-soft); vertical-align:middle;}
+  tr:last-child td{border-bottom:none;}
+  tr.row-highlight{background:rgba(63,167,154,.12); transition:background .3s ease;}
+  .clickable-row{cursor:pointer; transition:background .12s ease;}
+  .clickable-row:hover{background:rgba(255,255,255,.02);}
+
+  .full-panel{margin-bottom:28px;}
+
+  /* ===== Bullet Lists Style (REVISION-01) ===== */
+  ul.clean-bullets{margin:6px 0 10px; padding-left:18px; color:var(--ink); font-size:12.5px;}
+  ul.clean-bullets li{margin-bottom:5px; line-height:1.5;}
+
+  /* ===== Deep dive ===== */
+  details.card{background:var(--panel); border:1px solid var(--panel-line); border-radius:6px; margin-bottom:14px; overflow:hidden;}
+  details.card summary{list-style:none; cursor:pointer; padding:18px 20px; display:flex; justify-content:space-between; align-items:center; gap:16px;}
+  details.card summary::-webkit-details-marker{display:none;}
+  details.card summary .stitle{font-size:15px; font-weight:600; font-family:'Space Grotesk'; color:var(--ink);}
+  details.card summary .smeta{font-size:11.5px; color:var(--ink-dim); margin-top:6px; display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
+  details.card summary .chev{color:var(--signal-teal); font-size:20px; transition:transform .2s; flex-shrink:0; font-weight:600;}
+  details.card[open] summary .chev{transform:rotate(45deg);}
+  .card-body{padding:0 20px 22px; border-top:1px solid var(--panel-line);}
+  .flow{display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin:16px 0; font-size:12px;}
+  .flow .step{background:#0D2131; border:1px solid var(--panel-line); border-radius:4px; padding:8px 12px; color:var(--ink-dim); flex:1 1 150px; min-width:130px;}
+  .flow .arrow{color:var(--signal-teal); font-size:16px;}
+  .kv{display:grid; grid-template-columns:150px 1fr; gap:6px 14px; font-size:12.5px; margin:16px 0;}
+  .kv dt{color:var(--ink-faint); font-size:11.5px;}
+  .kv dd{margin:0; color:var(--ink);}
+  .kv dd a{color:var(--signal-teal); text-decoration:none;}
+  .kv dd a:hover{text-decoration:underline;}
+  .badge-row{display:flex; gap:8px; flex-wrap:wrap; margin:14px 0 16px;}
+  .subhead{font-size:11.5px; letter-spacing:.04em; color:var(--signal-teal); margin:18px 0 6px; font-weight:600; text-transform:uppercase;}
+  p.body-text{font-size:13px; color:var(--ink); margin:4px 0 10px; line-height:1.55;}
+  .fact{border-left:3px solid var(--signal-blue); padding-left:12px; margin:8px 0;}
+  .inference{border-left:3px solid var(--signal-amber); padding-left:12px; margin:8px 0;}
+  .tiny-label{font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-faint); display:block; margin-bottom:3px; font-weight:600;}
+
+  .relevance-block{background:#0D2131; border:1px solid var(--panel-line); border-radius:6px; padding:14px 16px; margin:16px 0;}
+  .relevance-tag{font-family:'Space Grotesk'; font-size:11.5px; font-weight:700; letter-spacing:.03em; margin-bottom:6px; display:inline-block;}
+  .relevance-tag.contextual{color:var(--signal-amber);}
+  .relevance-tag.watch{color:var(--ink-dim);}
+  .relevance-context{font-size:12.5px; color:var(--ink-dim); line-height:1.5;}
+  .relevance-context b{color:var(--ink);}
+
+  /* ===== Watchlist ===== */
+  .watch-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:16px;}
+  .watch-item{background:var(--panel); border:1px solid var(--panel-line); border-radius:6px; padding:18px 20px;}
+  .watch-item h4{font-size:14.5px; font-family:'Space Grotesk'; margin-bottom:12px; color:var(--ink);}
+  .watch-field{margin-bottom:10px; font-size:12.5px;}
+  .watch-field .fl{font-size:10px; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-faint); display:block; margin-bottom:3px; font-weight:600;}
+  .watch-field .fv{color:var(--ink-dim);}
+  .watch-src{
+    margin-top:14px; padding-top:10px; border-top:1px solid var(--panel-line-soft);
+    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;
+  }
+  .watch-src a{color:var(--signal-teal); text-decoration:none; font-size:12px; font-weight:500;}
+  .watch-src a:hover{text-decoration:underline;}
+  .watch-src .src-date{font-size:10.5px; color:var(--ink-faint);}
+
+  /* ===== Management awareness ===== */
+  .mgmt-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:12px;}
+  .mgmt-col{border-radius:6px; padding:18px 20px; border:1px solid var(--panel-line);}
+  .mgmt-col.attn{background:rgba(199,71,46,.08); border-color:rgba(199,71,46,.35);}
+  .mgmt-col.mon{background:rgba(227,161,59,.08); border-color:rgba(227,161,59,.35);}
+  .mgmt-col.info{background:rgba(76,134,199,.08); border-color:rgba(76,134,199,.35);}
+  .mgmt-col h4{font-size:12.5px; font-family:'Space Grotesk'; margin-bottom:12px; text-transform:uppercase; letter-spacing:.03em;}
+  .mgmt-col.attn h4{color:#E8896F;}
+  .mgmt-col.mon h4{color:var(--signal-amber);}
+  .mgmt-col.info h4{color:#8FB6E5;}
+  .mgmt-col ul{margin:0; padding-left:16px; font-size:12.5px; color:var(--ink-dim);}
+  .mgmt-col li{margin-bottom:8px;}
+
+  /* ===== Sources ===== */
+  .src-list{font-size:12.5px; color:var(--ink-dim);}
+  .src-list li{margin-bottom:10px;}
+  .src-list a{color:var(--signal-teal); text-decoration:none;}
+  .src-list a:hover{text-decoration:underline;}
+  .src-cat{font-size:11px; color:var(--signal-teal); margin:18px 0 8px; text-transform:uppercase; letter-spacing:.04em; font-weight:600;}
+
+  /* ===== Methodology panel (REVISION-01 Collapsible) ===== */
+  details.methodology{background:var(--panel); border:1px solid var(--panel-line); border-radius:6px; margin-top:24px;}
+  details.methodology summary{padding:14px 20px; cursor:pointer; font-size:12px; color:var(--ink-dim); display:flex; align-items:center; gap:8px; list-style:none;}
+  details.methodology summary::-webkit-details-marker{display:none;}
+  details.methodology summary::before{content:'ⓘ'; color:var(--signal-teal); font-weight:bold;}
+  details.methodology .m-body{padding:0 20px 18px; font-size:12px; color:var(--ink-faint); line-height:1.6;}
+
+  /* ===== Footer Disclaimer ===== */
+  footer{margin-top:24px; padding-top:16px; border-top:1px solid var(--panel-line); font-size:11.5px; color:var(--ink-faint); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;}
+
+  @media (max-width:960px){
+    .spotlight-grid{grid-template-columns:1fr;}
+    .kpi-grid{grid-template-columns:repeat(3,1fr);}
+    .grid2{grid-template-columns:1fr;}
+    .watch-grid{grid-template-columns:1fr;}
+    .mgmt-grid{grid-template-columns:1fr;}
+  }
+  @media (max-width:640px){
+    .kpi-grid{grid-template-columns:repeat(2,1fr);}
+    .kpi.total{grid-column: span 2;}
+    .header-inner{height:auto; padding:12px 0 0 0; flex-direction:column; align-items:stretch; gap:12px;}
+    .brand-area{justify-content:center;}
+    .header-actions{align-self:center; margin-top:0;}
+    .nav-tabs{width:100%; border-top:1px solid var(--panel-line-soft); padding-top:10px; padding-bottom:6px;}
+    .heatmap-wrap{overflow-x:auto; padding-bottom:10px; border-radius:5px;}
+    .heatmap-grid{grid-template-columns:52px repeat(3, minmax(90px, 1fr)); min-width:380px;}
+    .scroll-hint{display:block;}
+    .kv{grid-template-columns:1fr; gap:2px 0;}
+    .kv dt{margin-top:10px;}
+    .masthead{flex-direction:column; align-items:flex-start;}
+    .meta-block{text-align:left;}
+  }
+</style>
+</head>
+<body>
+
+<!-- APP HEADER WITH PRIMARY NAVIGATION & REFRESH BUTTON -->
+<header class="app-header">
+  <div class="header-inner">
+    <div class="brand-area">
+      <div class="brand-logo">PTI</div>
+      <div>
+        <div class="brand-title">ERM Intelligence</div>
+        <div class="brand-sub" data-i18n="brand_sub">External Risk Platform</div>
+      </div>
+    </div>
+
+    <!-- View Tabs Nav -->
+    <nav class="nav-tabs" id="main-nav">
+      <button class="nav-btn active" data-view="overview">
+        <span data-i18n="nav_overview">Overview</span>
+      </button>
+      <button class="nav-btn" data-view="landscape">
+        <span data-i18n="nav_landscape">Landscape</span>
+      </button>
+      <button class="nav-btn" data-view="signals">
+        <span data-i18n="nav_signals">Signals</span>
+        <span class="badge-count">5</span>
+      </button>
+      <button class="nav-btn" data-view="geography">
+        <span data-i18n="nav_geography">Geography</span>
+      </button>
+      <button class="nav-btn" data-view="watchlist">
+        <span data-i18n="nav_watchlist">Watchlist</span>
+        <span class="badge-count">4</span>
+      </button>
+      <button class="nav-btn" data-view="deepdive">
+        <span data-i18n="nav_deepdive">Deep Dive</span>
+      </button>
+      <button class="nav-btn" data-view="sources">
+        <span data-i18n="nav_sources">Sources</span>
+      </button>
+    </nav>
+
+    <!-- Header Actions (Status + Language Toggle) -->
+    <div class="header-actions">
+      <div class="update-status" id="update-status-badge">
+        <span class="status-dot"></span>
+        <span data-i18n="badge_manual_update">Manual Update Required</span>
+      </div>
+      <div class="lang-toggle">
+        <button class="lang-btn active" id="lang-id" onclick="setLanguage('id')">ID</button>
+        <button class="lang-btn" id="lang-en" onclick="setLanguage('en')">EN</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- MASTHEAD BANNER -->
+  <div class="masthead">
+    <div>
+      <div class="brand" data-i18n="mast_brand">PT Pelabuhan Tegar Indonesia (PTI) — Enterprise Risk Management</div>
+      <h1 data-i18n="mast_title">Daily Maritime &amp; Port Risk Intelligence</h1>
+      <div class="sub" data-i18n="mast_sub">External Business Environment Sensing Layer</div>
+    </div>
+    <div class="meta-block">
+      <div class="row"><span data-i18n="lbl_updated">Diperbarui:</span> <span id="val-date-display" data-i18n="val_date">Kamis, 3 September 2026, pagi WIB</span></div>
+      <div class="row"><span data-i18n="lbl_window">Window:</span> <span data-i18n="val_window">24–48 jam terakhir (tren 3 minggu)</span></div>
+      <div class="row"><span data-i18n="lbl_scope">Scope:</span> <span data-i18n="val_scope">Indonesia (Marunda / Jawa, Sulawesi, NTT, Malaka)</span></div>
+    </div>
+  </div>
+
+  <!-- VIEW 1: OVERVIEW -->
+  <main id="view-overview" class="view-pane active">
+    
+    <!-- TODAY'S INTELLIGENCE SPOTLIGHT (REVISION-01 REDESIGN) -->
+    <div class="spotlight-box">
+      <div class="spotlight-header">
+        <div class="spotlight-title" data-i18n="spotlight_title">Today's Intelligence Spotlight</div>
+        <div style="font-size:11px; color:var(--ink-faint);" data-i18n="spotlight_date">Snapshot: 3 September 2026</div>
+      </div>
+      <div class="spotlight-grid">
+        <!-- High Attention Spotlight Card -->
+        <div class="spot-card high">
+          <div class="spot-head" data-i18n="spot_high_head">2 HIGH ATTENTION DEVELOPMENTS</div>
+          <ul class="spot-list">
+            <li data-i18n="spot_h1"><strong>Kebakaran &amp; Tenggelamnya LCT Legenda Nusantara 699</strong> di Selat Tiworo (Sultra) bermuatan bahan kimia; 2 tewas &amp; pencemaran air laut.</li>
+            <li data-i18n="spot_h2"><strong>Peringatan Gelombang Tinggi BMKG (hingga 4 Meter)</strong> di Laut Jawa, Selat Makassar &amp; Lombok periode 2–5 September.</li>
+          </ul>
+        </div>
+
+        <!-- Monitor Spotlight Card -->
+        <div class="spot-card monitor">
+          <div class="spot-head" data-i18n="spot_mon_head">3 ACTIVE MONITOR SIGNALS</div>
+          <ul class="spot-list">
+            <li data-i18n="spot_m1"><strong>Kenaikan Harga BBM Non-Subsidi</strong> (Pertamina Dex/Dexlite per 1 Sep) dipicu eskalasi militer AS–Iran di Selat Hormuz.</li>
+            <li data-i18n="spot_m2"><strong>Gempa Susulan NTT (11.704 kejadian)</strong> pascagempa M7,7; aktivitas dilaporkan BMKG terus meluruh.</li>
+            <li data-i18n="spot_m3"><strong>Opsi Mogok Kerja Nasional Buruh TKBM</strong> atas tuntutan kesejahteraan; belum terealisasi.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- KPI GRID -->
+    <div class="section-label" data-i18n="sec_kpi">A. Risk Landscape Summary</div>
+    <div class="kpi-grid">
+      <div class="kpi total" onclick="switchView('signals', 'all')">
+        <div class="num">6</div>
+        <div class="label"><span data-i18n="kpi_total">Meaningful Developments Today</span>
+          <span class="tip-wrap"><span class="info-icon">i</span>
+            <span class="tip-bubble" data-i18n="tip_kpi_total">External developments assessed today carrying sufficient evidence and analytical value.</span>
+          </span>
+        </div>
+        <div class="snapshot-note" data-i18n="kpi_note">Baseline snapshot — initial comparison</div>
+      </div>
+
+      <div class="kpi high" onclick="switchView('signals', 'high')">
+        <div class="num">2</div>
+        <div class="label"><span data-i18n="kpi_high">High Attention</span>
+          <span class="tip-wrap"><span class="info-icon">i</span>
+            <span class="tip-bubble" data-i18n="tip_kpi_high">Developments currently warranting elevated attention based on relevance and evidence.</span>
+          </span>
+        </div>
+        <div class="snapshot-note" data-i18n="kpi_note">Baseline snapshot — initial comparison</div>
+      </div>
+
+      <div class="kpi monitor" onclick="switchView('signals', 'monitor')">
+        <div class="num">3</div>
+        <div class="label"><span data-i18n="kpi_monitor">Monitor</span>
+          <span class="tip-wrap"><span class="info-icon">i</span>
+            <span class="tip-bubble" data-i18n="tip_kpi_monitor">Relevant developments under observation without immediate elevated threat.</span>
+          </span>
+        </div>
+        <div class="snapshot-note" data-i18n="kpi_note">Baseline snapshot — initial comparison</div>
+      </div>
+
+      <div class="kpi background" onclick="switchView('signals', 'background')">
+        <div class="num">1</div>
+        <div class="label"><span data-i18n="kpi_background">Background</span>
+          <span class="tip-wrap"><span class="info-icon">i</span>
+            <span class="tip-bubble" data-i18n="tip_kpi_background">Useful contextual developments with limited current significance or direct exposure.</span>
+          </span>
+        </div>
+        <div class="snapshot-note" data-i18n="kpi_note">Baseline snapshot — initial comparison</div>
+      </div>
+
+      <div class="kpi info" onclick="switchView('landscape')">
+        <div class="num">2</div>
+        <div class="label"><span data-i18n="kpi_cross">Cross-Category Signals</span>
+          <span class="tip-wrap right"><span class="info-icon">i</span>
+            <span class="tip-bubble" data-i18n="tip_kpi_cross">Developments classified under multiple risk domains (e.g. Operational + Environmental).</span>
+          </span>
+        </div>
+        <div class="snapshot-note" data-i18n="kpi_note">Baseline snapshot — initial comparison</div>
+      </div>
+    </div>
+
+    <!-- MANAGEMENT AWARENESS SUMMARY -->
+    <div class="section-label" data-i18n="sec_mgmt">B. Executive Management Awareness</div>
+    <div class="mgmt-grid">
+      <div class="mgmt-col attn">
+        <h4 data-i18n="mgmt_high_title">High Attention Priority</h4>
+        <ul>
+          <li data-i18n="mgmt_h1">Insiden kebakaran/tumpahan kimia LCT Legenda Nusantara 699 — relevan sebagai preseden HSS &amp; lingkungan untuk kargo curah cair/kimia.</li>
+          <li data-i18n="mgmt_h2">Peringatan gelombang tinggi nasional 2–5 September — perlu pemantauan bersinggungan dengan jalur pelayaran armada PTI.</li>
+        </ul>
+      </div>
+      <div class="mgmt-col mon">
+        <h4 data-i18n="mgmt_mon_title">Active Watch List</h4>
+        <ul>
+          <li data-i18n="mgmt_m1">Tren kenaikan harga BBM non-subsidi (Dexlite/Pertamina Dex) akibat eskalasi Timur Tengah.</li>
+          <li data-i18n="mgmt_m2">Status gempa susulan NTT dan pemulihan infrastruktur pelabuhan pasca M7,7.</li>
+          <li data-i18n="mgmt_m3">Perkembangan dialog SP TKBM nasional terkait opsi mogok buruh bongkar muat.</li>
+        </ul>
+      </div>
+      <div class="mgmt-col info">
+        <h4 data-i18n="mgmt_info_title">Information &amp; Context</h4>
+        <ul>
+          <li data-i18n="mgmt_i1">Kerja sama trilateral coast guard Indonesia–Malaysia–Singapura di Selat Malaka.</li>
+          <li data-i18n="mgmt_i2">Tidak ada insiden baru terverifikasi di Laut Natuna Utara dalam 48 jam terakhir.</li>
+        </ul>
+      </div>
+    </div>
+    <p style="font-size:11.5px; color:var(--ink-faint); margin-top:8px;" data-i18n="mgmt_disclaimer">
+      Lapisan intelijen eksternal ini tidak menggantikan Risk Register internal, RCSA, atau proses eskalasi formal PTI. Penentuan tindak lanjut formal tetap memerlukan verifikasi kontekstual oleh fungsi ERM.
+    </p>
+
+  </main>
+
+  <!-- VIEW 2: LANDSCAPE -->
+  <main id="view-landscape" class="view-pane">
+    <div class="grid2">
+      <!-- HEATMAP PANEL -->
+      <div class="panel">
+        <div class="section-label" style="margin-bottom:14px;" data-i18n="sec_heatmap">Risk Heatmap — Impact × Escalation</div>
+        <div class="heatmap-wrap">
+          <div class="heatmap-grid">
+          <div></div>
+          <div class="hx-axis" data-i18n="esc_lo">Escalation<br>Rendah</div>
+          <div class="hx-axis" data-i18n="esc_md">Escalation<br>Sedang</div>
+          <div class="hx-axis" data-i18n="esc_hi">Escalation<br>Tinggi</div>
+
+          <div class="hy-axis" data-i18n="imp_hi">Impact<br>Tinggi</div>
+          <div class="hcell i-hi e-lo"></div>
+          <div class="hcell i-hi e-md" data-cell="hi-md">
+            <span class="chip" onclick="navigateToSignal('s1')"><span class="n">1</span><span data-i18n="chip_s1">Kebakaran &amp; tumpahan LCT</span></span>
+          </div>
+          <div class="hcell i-hi e-hi"></div>
+
+          <div class="hy-axis" data-i18n="imp_md">Impact<br>Sedang</div>
+          <div class="hcell i-md e-lo" data-cell="md-lo">
+            <span class="chip" onclick="navigateToSignal('s4')"><span class="n">4</span><span data-i18n="chip_s4">Aftershock NTT (meluruh)</span></span>
+          </div>
+          <div class="hcell i-md e-md" data-cell="md-md">
+            <span class="chip" onclick="navigateToSignal('s2')"><span class="n">2</span><span data-i18n="chip_s2">Gelombang tinggi nasional</span></span>
+            <span class="chip" onclick="navigateToSignal('s5')"><span class="n">5</span><span data-i18n="chip_s5">Opsi mogok TKBM</span></span>
+          </div>
+          <div class="hcell i-md e-hi" data-cell="md-hi">
+            <span class="chip" onclick="navigateToSignal('s3')"><span class="n">3</span><span data-i18n="chip_s3">Eskalasi Tim-Teng / BBM</span></span>
+          </div>
+
+          <div class="hy-axis" data-i18n="imp_lo">Impact<br>Rendah</div>
+          <div class="hcell i-lo e-lo"></div>
+          <div class="hcell i-lo e-md"></div>
+          <div class="hcell i-lo e-hi"></div>
+          </div>
+        </div>
+        
+        <div class="legend">
+          <div class="lg"><span class="sw" style="background:rgba(199,71,46,.4);"></span> <span data-i18n="lg_high">High Attention</span></div>
+          <div class="lg"><span class="sw" style="background:rgba(227,161,59,.35);"></span> <span data-i18n="lg_monitor">Monitor</span></div>
+          <div class="lg"><span class="sw" style="background:rgba(63,167,154,.3);"></span> <span data-i18n="lg_background">Background</span></div>
+        </div>
+        <p style="font-size:11px; color:var(--ink-faint); margin-top:12px;" data-i18n="heatmap_note">
+          Klik chip untuk langsung menelaah analisis sinyal pada Deep Dive. Penempatan berbasis evidence yang tersedia hari ini dan professional judgment.
+        </p>
+      </div>
+
+      <!-- TREND LIST PANEL -->
+      <div class="panel">
+        <div class="trend-title-row">
+          <div class="section-label" style="margin-bottom:0;" data-i18n="sec_trends">Tren Tema Risiko</div>
+          <span class="tip-wrap right"><span class="info-icon">i</span>
+            <span class="tip-bubble" data-i18n="tip_trends">
+              <b>Increasing</b> — signal activity increasing.<br>
+              <b>Stable</b> — persistent without change.<br>
+              <b>Seasonal</b> — recurring cyclical pattern.<br>
+              <b>Decreasing</b> — declining signal impact.<br>
+              <b>Uncertain</b> — trajectory not yet clear.
+            </span>
+          </span>
+        </div>
+        <div class="trend-list">
+          <div class="trend-row">
+            <div class="name" data-i18n="tr_1">Kecelakaan kapal / kebakaran &amp; tumpahan muatan</div>
+            <div class="trend-tag up" data-i18n="tag_up">↑ Increasing</div>
+          </div>
+          <div class="trend-row">
+            <div class="name" data-i18n="tr_2">Gelombang tinggi &amp; cuaca pelayaran</div>
+            <div class="trend-tag seasonal" data-i18n="tag_seasonal">→ Seasonal / Cyclical</div>
+          </div>
+          <div class="trend-row">
+            <div class="name" data-i18n="tr_3">Harga BBM non-subsidi / biaya energi</div>
+            <div class="trend-tag up" data-i18n="tag_up">↑ Increasing</div>
+          </div>
+          <div class="trend-row">
+            <div class="name" data-i18n="tr_4">Gempa NTT &amp; infrastruktur pelabuhan</div>
+            <div class="trend-tag down" data-i18n="tag_down">↓ Decreasing</div>
+          </div>
+          <div class="trend-row">
+            <div class="name" data-i18n="tr_5">Ketegangan tenaga kerja bongkar muat (TKBM)</div>
+            <div class="trend-tag uncertain" data-i18n="tag_uncertain">? Uncertain</div>
+          </div>
+          <div class="trend-row">
+            <div class="name" data-i18n="tr_6">Insiden Laut Natuna Utara &amp; Selat Malaka</div>
+            <div class="trend-tag stable" data-i18n="tag_stable">→ Stable / Persistent</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- VIEW 3: SIGNALS RANKING -->
+  <main id="view-signals" class="view-pane">
+    <div class="panel full-panel">
+      <div class="filter-bar">
+        <div class="section-label" style="margin-bottom:0;" data-i18n="sec_ranking">Ranking Sinyal Risiko Utama Hari Ini</div>
+        <div class="filter-group">
+          <button class="filter-btn active" onclick="filterSignals('all', this)" data-i18n="flt_all">All Signals (5)</button>
+          <button class="filter-btn" onclick="filterSignals('high', this)" data-i18n="flt_high">High Attention (2)</button>
+          <button class="filter-btn" onclick="filterSignals('monitor', this)" data-i18n="flt_mon">Monitor (3)</button>
+        </div>
+      </div>
+
+      <div class="scroll-hint" data-i18n="scroll_hint">→ Geser tabel untuk melihat kolom lainnya</div>
+      <div class="table-scroll">
+        <table id="signals-table">
+          <thead>
+            <tr>
+              <th data-i18n="th_signal">Sinyal</th>
+              <th data-i18n="th_category">Kategori</th>
+              <th data-i18n="th_location">Lokasi</th>
+              <th data-i18n="th_impact">Impact</th>
+              <th data-i18n="th_escalation">Escalation</th>
+              <th data-i18n="th_trend">Tren</th>
+              <th data-i18n="th_status">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr id="rank-s1" class="clickable-row signal-row status-high" onclick="navigateToSignal('s1')">
+              <td><strong data-i18n="s1_title">1. Kebakaran &amp; tumpahan kimia — LCT Legenda Nusantara 699</strong></td>
+              <td>HSS / Environmental / Operational</td>
+              <td data-i18n="s1_loc">Selat Tiworo, Sultra</td>
+              <td><span class="badge-level lvl-high"><span class="bars"><i></i><i></i><i></i></span><span data-i18n="lvl_hi">Tinggi</span></span></td>
+              <td><span class="badge-level lvl-medium"><span class="bars"><i></i><i></i><i></i></span><span data-i18n="lvl_md">Sedang</span></span></td>
+              <td><span class="trend-arrow up">↑</span></td>
+              <td><span class="badge-status high"><span class="dot"></span>High Attention</span></td>
+            </tr>
+            <tr id="rank-s2" class="clickable-row signal-row status-high" onclick="navigateToSignal('s2')">
+              <td><strong data-i18n="s2_title">2. Peringatan gelombang tinggi hingga 4 m (2–5 Sep)</strong></td>
+              <td>Operational / Environmental</td>
+              <td data-i18n="s2_loc">Nasional (multi-perairan)</td>
+              <td><span class="badge-level lvl-medium"><span class="bars"><i></i><i></i><i></i></span><span data-i18n="lvl_md">Sedang</span></span></td>
+              <td><span class="badge-level lvl-medium"><span class="bars"><i></i><i></i><i></i></span><span data-i18n="lvl_md">Sedang</span></span></td>
+              <td><span class="trend-arrow stable">→</span></td>
+              <td><span class="badge-status high"><span class="dot"></span>High Attention</span></td>
+            </tr>
+            <tr id="rank-s3" class="clickable-row signal-row status-monitor" onclick="navigateToSignal('s3')">
+              <td><strong data-i18n="s3_title">3. Eskalasi Timur Tengah → harga BBM non-subsidi naik</strong></td>
+              <td>Financial / Strategic / Supply Chain</td>
+              <td data-i18n="s3_loc">Internasional → Domestik</td>
+              <td><span class="badge-level lvl-medium"><span class="bars"><i></i><i></i><i></i></span><span data-i18n="lvl_md">Sedang</span></span></td>
+              <td><span class="badge-level lvl-high"><span class="bars"><i></i><i></i><i></i></span><span data-i18n="lvl_hi">Tinggi</span></span></td>
+              <td><span class="trend-arrow up">↑</span></td>
+              <td><span class="badge-status monitor"><span class="dot"></span>Monitor</span></td>
+            </tr>
+            <tr id="rank-s4" class="clickable-row signal-row status-monitor" onclick="navigateToSignal('s4')">
+              <td><strong data-i18n="s4_title">4. Gempa susulan NTT &amp; pemulihan infrastruktur pelabuhan</strong></td>
+              <td>Operational / Environmental</td>
+              <td data-i18n="s4_loc">NTT (Flores)</td>
+              <td><span class="badge-level lvl-medium"><span class="bars"><i></i><i></i><i></i></span><span data-i18n="lvl_md_loc">Sedang (lokal)</span></span></td>
+              <td><span class="badge-level lvl-low"><span class="bars"><i></i><i></i><i></i></span><span data-i18n="lvl_lo">Rendah</span></span></td>
+              <td><span class="trend-arrow down">↓</span></td>
+              <td><span class="badge-status monitor"><span class="dot"></span>Monitor</span></td>
+            </tr>
+            <tr id="rank-s5" class="clickable-row signal-row status-monitor" onclick="navigateToSignal('s5')">
+              <td><strong data-i18n="s5_title">5. Opsi mogok nasional TKBM (belum terealisasi)</strong></td>
+              <td>Regulatory / Compliance / Operational</td>
+              <td data-i18n="s5_loc">Nasional</td>
+              <td><span class="badge-level lvl-medium"><span class="bars"><i></i><i></i><i></i></span><span data-i18n="lvl_md">Sedang</span></span></td>
+              <td><span class="badge-level lvl-low"><span class="bars"><i></i><i></i><i></i></span><span data-i18n="lvl_lo">Rendah</span></span></td>
+              <td><span class="trend-arrow uncertain">?</span></td>
+              <td><span class="badge-status monitor"><span class="dot"></span>Monitor</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <!-- VIEW 4: GEOGRAPHY -->
+  <main id="view-geography" class="view-pane">
+    <div class="panel full-panel">
+      <div class="section-label" style="margin-bottom:14px;" data-i18n="sec_geo">Sebaran Geografis Sinyal External Risk</div>
+      <div class="scroll-hint" data-i18n="scroll_hint">→ Geser tabel untuk melihat kolom lainnya</div>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th data-i18n="th_region">Wilayah / Jalur</th>
+              <th data-i18n="th_event">Sinyal / Kejadian</th>
+              <th data-i18n="th_status">Status</th>
+              <th data-i18n="th_note">Catatan Singkat</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong data-i18n="geo_r1">Selat Tiworo, Kabaena (Sultra)</strong></td>
+              <td data-i18n="geo_e1">Kebakaran &amp; tenggelamnya LCT bermuatan kimia; 2 tewas; tumpahan bahan kimia ke laut</td>
+              <td><span class="badge-status high"><span class="dot"></span>High Attention</span></td>
+              <td data-i18n="geo_n1">Insiden aktif, penanganan tumpahan lingkungan sedang berlangsung</td>
+            </tr>
+            <tr>
+              <td><strong data-i18n="geo_r2">Laut Jawa, Selat Makassar, Bali &amp; Lombok</strong></td>
+              <td data-i18n="geo_e2">Gelombang 2,5–4 m, angin hingga 31 knot, periode 2–5 September</td>
+              <td><span class="badge-status high"><span class="dot"></span>High Attention</span></td>
+              <td data-i18n="geo_n2">Berlaku luas nasional; risiko utama pelayaran tongkang &amp; kapal kecil-menengah</td>
+            </tr>
+            <tr>
+              <td><strong data-i18n="geo_r3">Nusa Tenggara Timur (Flores)</strong></td>
+              <td data-i18n="geo_e3">11.704 gempa susulan pascagempa M7,7 (15 Agu); pemulihan Maumere</td>
+              <td><span class="badge-status monitor"><span class="dot"></span>Monitor</span></td>
+              <td data-i18n="geo_n3">Tren meluruh; stabilisasi diperkirakan akhir September</td>
+            </tr>
+            <tr>
+              <td><strong data-i18n="geo_r4">Selat Hormuz → Domestik</strong></td>
+              <td data-i18n="geo_e4">Eskalasi AS–Iran; Brent &gt;US$90/barel → harga BBM non-subsidi naik</td>
+              <td><span class="badge-status monitor"><span class="dot"></span>Monitor</span></td>
+              <td data-i18n="geo_n4">Transmisi via harga solar industri / BBM non-subsidi per 1 September</td>
+            </tr>
+            <tr>
+              <td><strong data-i18n="geo_r5">Pelabuhan Nasional (Skema TKBM)</strong></td>
+              <td data-i18n="geo_e5">Opsi mogok nasional buruh bongkar muat atas tuntutan kesejahteraan</td>
+              <td><span class="badge-status monitor"><span class="dot"></span>Monitor</span></td>
+              <td data-i18n="geo_n5">Belum terealisasi; dialog masih berlangsung sejak akhir Juli</td>
+            </tr>
+            <tr>
+              <td><strong data-i18n="geo_r6">Selat Malaka / Laut Natuna Utara</strong></td>
+              <td data-i18n="geo_e6">Tidak ada insiden baru terverifikasi 24–48 jam terakhir</td>
+              <td><span class="badge-status background"><span class="dot"></span>Background</span></td>
+              <td data-i18n="geo_n6">Kerja sama trilateral coast guard tetap relevan sebagai konteks struktural</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <!-- VIEW 5: WATCHLIST -->
+  <main id="view-watchlist" class="view-pane">
+    <div class="section-label" style="margin-bottom:14px;" data-i18n="sec_watch">Watchlist — Titik Pantau Aktif &amp; Indikator Eskalasi</div>
+    <div class="watch-grid">
+      <div class="watch-item">
+        <h4 data-i18n="w1_title">Kecelakaan Kapal Muatan Berbahaya (Kimia/Curah Cair)</h4>
+        <div class="watch-field">
+          <span class="fl" data-i18n="lbl_wtw">What to Watch</span>
+          <span class="fv" data-i18n="w1_wtw">Frekuensi kejadian kebakaran/tenggelam kapal muatan B3 per triwulan; hasil investigasi resmi Ditjen Hubla.</span>
+        </div>
+        <div class="watch-field">
+          <span class="fl" data-i18n="lbl_dir">Current Direction</span>
+          <span class="trend-tag up" style="font-size:11px;" data-i18n="tag_up">↑ Increasing</span>
+        </div>
+        <div class="watch-field">
+          <span class="fl" data-i18n="lbl_trg">Trigger / Escalation Indicator</span>
+          <span class="fv" data-i18n="w1_trg">Insiden serupa berulang dalam radius operasional PTI atau melibatkan vendor kapal sejenis.</span>
+        </div>
+        <div class="watch-src">
+          <a href="https://www.antaranews.com/berita/5723672/kemenhub-sebut-dua-awak-tewas-akibat-kebakaran-kapal-di-sultra" target="_blank">ANTARA News</a>
+          <span class="src-date">3 Sep 2026</span>
+        </div>
+      </div>
+
+      <div class="watch-item">
+        <h4 data-i18n="w2_title">Cuaca Ekstrem &amp; Gelombang Tinggi Pelayaran</h4>
+        <div class="watch-field">
+          <span class="fl" data-i18n="lbl_wtw">What to Watch</span>
+          <span class="fv" data-i18n="w2_wtw">Peringatan dini harian BMKG Maritim untuk perairan Jawa, Selat Makassar &amp; Lombok.</span>
+        </div>
+        <div class="watch-field">
+          <span class="fl" data-i18n="lbl_dir">Current Direction</span>
+          <span class="trend-tag seasonal" style="font-size:11px;" data-i18n="tag_seasonal">→ Seasonal / Cyclical</span>
+        </div>
+        <div class="watch-field">
+          <span class="fl" data-i18n="lbl_trg">Trigger / Escalation Indicator</span>
+          <span class="fv" data-i18n="w2_trg">Perpanjangan periode peringatan melewati 5 September atau kenaikan tinggi gelombang &gt;4 meter.</span>
+        </div>
+        <div class="watch-src">
+          <a href="https://maritim.bmkg.go.id/cuaca/peringatan/gelombang" target="_blank">BMKG Maritim</a>
+          <span class="src-date">Live / Running</span>
+        </div>
+      </div>
+
+      <div class="watch-item">
+        <h4 data-i18n="w3_title">Harga BBM Non-Subsidi &amp; Geopolitik Timur Tengah</h4>
+        <div class="watch-field">
+          <span class="fl" data-i18n="lbl_wtw">What to Watch</span>
+          <span class="fv" data-i18n="w3_wtw">Pergerakan harga minyak Brent/ICP; penyesuaian harga BBM non-subsidi Pertamina bulanan.</span>
+        </div>
+        <div class="watch-field">
+          <span class="fl" data-i18n="lbl_dir">Current Direction</span>
+          <span class="trend-tag up" style="font-size:11px;" data-i18n="tag_up">↑ Increasing</span>
+        </div>
+        <div class="watch-field">
+          <span class="fl" data-i18n="lbl_trg">Trigger / Escalation Indicator</span>
+          <span class="fv" data-i18n="w3_trg">Brent bertahan &gt;US$95/barel selama &gt;1 bulan; penutupan fisik Selat Hormuz / Selat Malaka.</span>
+        </div>
+        <div class="watch-src">
+          <a href="https://www.cnbcindonesia.com/research/20260831100938-128-763566/ini-hitung-hitungan-harga-bbm-per-1-september-2026-naik-atau-turun" target="_blank">CNBC Indonesia</a>
+          <span class="src-date">31 Aug 2026</span>
+        </div>
+      </div>
+
+      <div class="watch-item">
+        <h4 data-i18n="w4_title">Ketenagakerjaan &amp; Opsi Mogok Buruh TKBM</h4>
+        <div class="watch-field">
+          <span class="fl" data-i18n="lbl_wtw">What to Watch</span>
+          <span class="fv" data-i18n="w4_wtw">Hasil dialog SP TKBM Indonesia dengan Kementerian Terkait (Hubla/Naker).</span>
+        </div>
+        <div class="watch-field">
+          <span class="fl" data-i18n="lbl_dir">Current Direction</span>
+          <span class="trend-tag uncertain" style="font-size:11px;" data-i18n="tag_uncertain">? Uncertain</span>
+        </div>
+        <div class="watch-field">
+          <span class="fl" data-i18n="lbl_trg">Trigger / Escalation Indicator</span>
+          <span class="fv" data-i18n="w4_trg">Pengumuman resmi tanggal mogok kerja nasional atau aksi lokal di pelabuhan sejenis.</span>
+        </div>
+        <div class="watch-src">
+          <a href="https://jurnalpatrolinews.co.id/nasional/kesejahteraan-tak-kunjung-membaik-buruh-pelabuhan-buka-opsi-mogok-nasional/" target="_blank">Jurnal Patroli News</a>
+          <span class="src-date">31 Jul 2026</span>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- VIEW 6: DEEP DIVE -->
+  <main id="view-deepdive" class="view-pane">
+    <div class="section-label" style="margin-bottom:14px;" data-i18n="sec_dd">Deep-Dive — Analisis Sinyal Material</div>
+
+    <!-- CARD 1 -->
+    <details class="card" id="card-s1" open>
+      <summary>
+        <div>
+          <div class="stitle" data-i18n="s1_dd_title">1. Kebakaran &amp; tenggelamnya LCT Legenda Nusantara 699 (bermuatan kimia)</div>
+          <div class="smeta">
+            <span class="badge-status high"><span class="dot"></span>High Attention</span>
+            <span data-i18n="s1_dd_meta">Selat Tiworo, Kabaena, Sultra · 1–3 September 2026</span>
+          </div>
+        </div>
+        <div class="chev">+</div>
+      </summary>
+      <div class="card-body">
+        <div class="badge-row">
+          <span class="badge-status background"><span class="dot"></span>HSS</span>
+          <span class="badge-status background"><span class="dot"></span>Environmental</span>
+          <span class="badge-status background"><span class="dot"></span>Operational</span>
+          <span class="badge-level lvl-high"><span class="bars"><i></i><i></i><i></i></span><span data-i18n="lbl_imp_hi">Impact: Tinggi</span></span>
+          <span class="badge-level lvl-medium"><span class="bars"><i></i><i></i><i></i></span><span data-i18n="lbl_esc_md">Escalation: Sedang</span></span>
+        </div>
+
+        <div class="subhead" data-i18n="sub_sit">Situation / Fact</div>
+        <div class="fact">
+          <span class="tiny-label" data-i18n="lbl_fact">Fact</span>
+          <p class="body-text" data-i18n="s1_fact">Kapal LCT Legenda Nusantara 699 pengangkut bahan kimia terbakar di Perairan Kabaena, Selat Tiworo, Sultra pada 1 September 2026. Dari 13 POB, 2 tewas, 4 dirawat intensif, 7 selamat. Kapal dilaporkan tenggelam dan bahan kimia tumpah ke laut. UPP Kelas II Raha berkoordinasi menangani dampak lingkungan.</p>
+        </div>
+
+        <div class="subhead" data-i18n="sub_inf">Risk Interpretation</div>
+        <div class="inference">
+          <span class="tiny-label" data-i18n="lbl_inf">Analytical Inference</span>
+          <p class="body-text" data-i18n="s1_inf">Kombinasi korban jiwa, tenggelamnya armada, dan pencemaran kimia menjadikannya insiden multi-dimensi. Bagian dari tren berulang kecelakaan armada domestik non-migas sepanjang 2026 — mengindikasikan kerentanan sistemik pada armada curah/kimia skala kecil-menengah.</p>
+        </div>
+
+        <div class="subhead" data-i18n="sub_trans">PTI Context — Transmission Mechanism</div>
+        <div class="flow">
+          <div class="step" data-i18n="s1_fl1">Insiden kebakaran/tumpahan B3 kapal LCT</div>
+          <div class="arrow">→</div>
+          <div class="step" data-i18n="s1_fl2">Preseden risiko HSS &amp; lingkungan kargo curah cair/kimia</div>
+          <div class="arrow">→</div>
+          <div class="step" data-i18n="s1_fl3">Relevan bagi terminal multipurpose pemroses kargo serupa</div>
+          <div class="arrow">→</div>
+          <div class="step" data-i18n="s1_fl4">Implikasi: Pengetatan SOP B3 &amp; kesiapan tanggap darurat tumpahan</div>
+        </div>
+
+        <div class="relevance-block">
+          <span class="relevance-tag contextual">CONTEXTUALLY RELEVANT</span>
+          <div class="relevance-context" data-i18n="s1_rel"><b>Context:</b> Relevan bagi operator pelabuhan/terminal multipurpose yang menangani kargo curah cair/kimia atau armada vendor sejenis. Belum terdapat evidence yang menghubungkan insiden ini secara langsung dengan operasi internal PTI.</div>
+        </div>
+
+        <div class="subhead" data-i18n="lbl_wtw">What to Watch</div>
+        <ul class="clean-bullets" data-i18n="s1_wtw_list">
+          <li>Hasil investigasi resmi Ditjen Hubla &amp; KNKT mengenai penyebab kebakaran.</li>
+          <li>Skala dan durasi dampak pencemaran lingkungan di Selat Tiworo.</li>
+          <li>Evaluasi standar keselamatan pelayaran kapal LCT curah cair/kimia domestik.</li>
+        </ul>
+
+        <div class="kv">
+          <dt data-i18n="lbl_src_pri">Sumber utama</dt>
+          <dd><a href="https://www.antaranews.com/berita/5723672/kemenhub-sebut-dua-awak-tewas-akibat-kebakaran-kapal-di-sultra" target="_blank">ANTARA — Kemenhub sebut 2 awak tewas akibat kebakaran kapal di Sultra</a> (3 Sep 2026)</dd>
+        </div>
+      </div>
+    </details>
+
+    <!-- CARD 2 -->
+    <details class="card" id="card-s2">
+      <summary>
+        <div>
+          <div class="stitle" data-i18n="s2_dd_title">2. Peringatan gelombang tinggi hingga 4 meter (2–5 September 2026)</div>
+          <div class="smeta">
+            <span class="badge-status high"><span class="dot"></span>High Attention</span>
+            <span data-i18n="s2_dd_meta">Multi-perairan nasional · BMKG Maritim</span>
+          </div>
+        </div>
+        <div class="chev">+</div>
+      </summary>
+      <div class="card-body">
+        <div class="badge-row">
+          <span class="badge-status background"><span class="dot"></span>Operational</span>
+          <span class="badge-status background"><span class="dot"></span>Environmental</span>
+          <span class="badge-level lvl-medium"><span class="bars"><i></i><i></i><i></i></span><span data-i18n="lbl_imp_md">Impact: Sedang</span></span>
+          <span class="badge-level lvl-medium"><span class="bars"><i></i><i></i><i></i></span><span data-i18n="lbl_esc_md">Escalation: Sedang</span></span>
+        </div>
+
+        <div class="subhead" data-i18n="sub_sit">Situation / Fact</div>
+        <div class="fact">
+          <span class="tiny-label" data-i18n="lbl_fact">Fact</span>
+          <p class="body-text" data-i18n="s2_fact">BMKG mengeluarkan peringatan resmi gelombang tinggi hingga 4 meter di Laut Jawa, Selat Makassar selatan, Selat Bali &amp; Lombok periode 2–5 September dipicu angin timur-tenggara 5–31 knot. Risiko utama pada pelayaran tongkang &amp; kapal barang kecil-menengah.</p>
+        </div>
+
+        <div class="subhead" data-i18n="sub_inf">Risk Interpretation</div>
+        <div class="inference">
+          <span class="tiny-label" data-i18n="lbl_inf">Analytical Inference</span>
+          <p class="body-text" data-i18n="s2_inf">Pola musiman peralihan angin dengan dampak simultan di lintas perairan utama Indonesia. Berpotensi mengganggu ketepatan waktu jadwal sandar (vessel turnaround) dan tongkang kargo di berbagai pelabuhan.</p>
+        </div>
+
+        <div class="subhead" data-i18n="sub_trans">PTI Context — Transmission Mechanism</div>
+        <div class="flow">
+          <div class="step" data-i18n="s2_fl1">Gelombang tinggi &amp; angin kencang multi-perairan</div>
+          <div class="arrow">→</div>
+          <div class="step" data-i18n="s2_fl2">Penundaan pemanduan / olah gerak kapal &amp; tongkang</div>
+          <div class="arrow">→</div>
+          <div class="step" data-i18n="s2_fl3">Potensi keterlambatan kedatangan kapal di pelabuhan</div>
+          <div class="arrow">→</div>
+          <div class="step" data-i18n="s2_fl4">Potensi fluktuasi utilisasi dermaga &amp; penumpukan yard</div>
+        </div>
+
+        <div class="relevance-block">
+          <span class="relevance-tag contextual">CONTEXTUALLY RELEVANT</span>
+          <div class="relevance-context" data-i18n="s2_rel"><b>Context:</b> Relevan bagi terminal yang menerima alur pelayaran dari kawasan Laut Jawa dan sekitarnya. Tingkat dampak langsung pada jadwal berthing PTI tergantung pada armada kapal aktif hari ini.</div>
+        </div>
+
+        <div class="subhead" data-i18n="lbl_wtw">What to Watch</div>
+        <ul class="clean-bullets" data-i18n="s2_wtw_list">
+          <li>Pembaruan harian peringatan cuaca BMKG Maritim.</li>
+          <li>Potensi perpanjangan gelombang tinggi melewati 5 September.</li>
+          <li>Laporan gangguan/penundaan pelayaran armada tongkang di Laut Jawa.</li>
+        </ul>
+
+        <div class="kv">
+          <dt data-i18n="lbl_src_pri">Sumber utama</dt>
+          <dd><a href="https://ambon.antaranews.com/berita/342201/bmkg-imbau-nelayan-mewaspadai-gelombang-tinggi-hingga-4-meter" target="_blank">ANTARA — BMKG imbau waspada gelombang tinggi hingga 4 meter</a> (3 Sep 2026)</dd>
+        </div>
+      </div>
+    </details>
+
+    <!-- CARD 3 -->
+    <details class="card" id="card-s3">
+      <summary>
+        <div>
+          <div class="stitle" data-i18n="s3_dd_title">3. Eskalasi militer Timur Tengah mendorong kenaikan harga BBM non-subsidi</div>
+          <div class="smeta">
+            <span class="badge-status monitor"><span class="dot"></span>Monitor</span>
+            <span data-i18n="s3_dd_meta">Selat Hormuz / global → domestik</span>
+          </div>
+        </div>
+        <div class="chev">+</div>
+      </summary>
+      <div class="card-body">
+        <div class="badge-row">
+          <span class="badge-status background"><span class="dot"></span>Financial</span>
+          <span class="badge-status background"><span class="dot"></span>Supply Chain</span>
+          <span class="badge-level lvl-medium"><span class="bars"><i></i><i></i><i></i></span><span data-i18n="lbl_imp_md">Impact: Sedang</span></span>
+          <span class="badge-level lvl-high"><span class="bars"><i></i><i></i><i></i></span><span data-i18n="lbl_esc_hi">Escalation: Tinggi</span></span>
+        </div>
+
+        <div class="subhead" data-i18n="sub_sit">Situation / Fact</div>
+        <div class="fact">
+          <span class="tiny-label" data-i18n="lbl_fact">Fact</span>
+          <p class="body-text" data-i18n="s3_fact">Konflik militer dekat Selat Hormuz menaikkan harga Brent ke &gt;US$90/barel (+12,8% bulanan). Efektif 1 September 2026, Pertamina menaikkan harga BBM non-subsidi (Pertamina Dex, Dexlite), sementara BBM subsidi dipertahankan.</p>
+        </div>
+
+        <div class="subhead" data-i18n="sub_inf">Risk Interpretation</div>
+        <div class="inference">
+          <span class="tiny-label" data-i18n="lbl_inf">Analytical Inference</span>
+          <p class="body-text" data-i18n="s3_inf">Tren biaya energi yang meningkat berkelanjutan. Jalur transmisi utama ke pelabuhan adalah kenaikan biaya solar industri / BBM non-subsidi untuk alat berat bongkar muat dan genset pendukung operasional.</p>
+        </div>
+
+        <div class="subhead" data-i18n="sub_trans">PTI Context — Transmission Mechanism</div>
+        <div class="flow">
+          <div class="step" data-i18n="s3_fl1">Eskalasi geopolitik Selat Hormuz</div>
+          <div class="arrow">→</div>
+          <div class="step" data-i18n="s3_fl2">Kenaikan harga minyak mentah &amp; ICP</div>
+          <div class="arrow">→</div>
+          <div class="step" data-i18n="s3_fl3">Penyesuaian harga BBM non-subsidi domestik</div>
+          <div class="arrow">→</div>
+          <div class="step" data-i18n="s3_fl4">Tekanan pada OPEX BBM alat berat &amp; genset pelabuhan</div>
+        </div>
+
+        <div class="relevance-block">
+          <span class="relevance-tag contextual">CONTEXTUALLY RELEVANT</span>
+          <div class="relevance-context" data-i18n="s3_rel"><b>Context:</b> Relevan bagi operator pelabuhan yang mengonsumsi solar non-subsidi untuk operasional alat bongkar muat/genset. Besaran implikasi biaya memerlukan data konsumsi BBM internal.</div>
+        </div>
+
+        <div class="subhead" data-i18n="lbl_wtw">What to Watch</div>
+        <ul class="clean-bullets" data-i18n="s3_wtw_list">
+          <li>Stabilitas jalur pelayaran Selat Hormuz.</li>
+          <li>Pergerakan harga minyak mentah Brent &amp; ICP bulanan.</li>
+          <li>Pengumuman penyesuaian harga BBM Pertamina berikutnya per 1 Oktober.</li>
+        </ul>
+
+        <div class="kv">
+          <dt data-i18n="lbl_src_pri">Sumber utama</dt>
+          <dd><a href="https://www.cnbcindonesia.com/research/20260831100938-128-763566/ini-hitung-hitungan-harga-bbm-per-1-september-2026-naik-atau-turun" target="_blank">CNBC Indonesia — Perhitungan harga BBM per 1 September 2026</a> (31 Aug 2026)</dd>
+        </div>
+      </div>
+    </details>
+
+    <!-- CARD 4 -->
+    <details class="card" id="card-s4">
+      <summary>
+        <div>
+          <div class="stitle" data-i18n="s4_dd_title">4. Gempa susulan NTT masih berlangsung, tren meluruh</div>
+          <div class="smeta">
+            <span class="badge-status monitor"><span class="dot"></span>Monitor</span>
+            <span data-i18n="s4_dd_meta">Flores, NTT</span>
+          </div>
+        </div>
+        <div class="chev">+</div>
+      </summary>
+      <div class="card-body">
+        <div class="badge-row">
+          <span class="badge-status background"><span class="dot"></span>Operational</span>
+          <span class="badge-status background"><span class="dot"></span>Environmental</span>
+          <span class="badge-level lvl-medium"><span class="bars"><i></i><i></i><i></i></span><span data-i18n="lbl_imp_loc">Impact: Sedang (Lokal)</span></span>
+          <span class="badge-level lvl-low"><span class="bars"><i></i><i></i><i></i></span><span data-i18n="lbl_esc_lo">Escalation: Rendah</span></span>
+        </div>
+
+        <div class="subhead" data-i18n="sub_sit">Situation / Fact</div>
+        <div class="fact">
+          <span class="tiny-label" data-i18n="lbl_fact">Fact</span>
+          <p class="body-text" data-i18n="s4_fact">Pascagempa M7,7 di Flores (15 Agu), BMKG mencatat 11.704 gempa susulan hingga 3 September dengan tren meluruh dan diperkirakan stabil akhir September.</p>
+        </div>
+
+        <div class="subhead" data-i18n="sub_inf">Risk Interpretation</div>
+        <div class="inference">
+          <span class="tiny-label" data-i18n="lbl_inf">Analytical Inference</span>
+          <p class="body-text" data-i18n="s4_inf">Risiko dalam fase pemulihan (recovery phase), bukan eskalasi baru. Menjadi rujukan preseden ketahanan infrastruktur pelabuhan pesisir terhadap aktivitas seismik.</p>
+        </div>
+
+        <div class="relevance-block">
+          <span class="relevance-tag watch">WATCH ONLY</span>
+          <div class="relevance-context" data-i18n="s4_rel"><b>Context:</b> Preseden BCP (Business Continuity Plan) infrastruktur pelabuhan. Tidak ada keterkaitan operasional langsung dengan fasilitas PTI.</div>
+        </div>
+
+        <div class="subhead" data-i18n="lbl_wtw">What to Watch</div>
+        <ul class="clean-bullets" data-i18n="s4_wtw_list">
+          <li>Update frekuensi gempa susulan mingguan dari BMKG.</li>
+          <li>Perkembangan perbaikan fasilitas Pelabuhan Maumere.</li>
+        </ul>
+
+        <div class="kv">
+          <dt data-i18n="lbl_src_pri">Sumber utama</dt>
+          <dd><a href="https://mediaindonesia.com/nusantara/929188/dua-gempa-dangkal-guncang-flores-bmkg-catat-11704-susulan" target="_blank">Media Indonesia — Gempa susulan Flores 11.704 kejadian</a> (3 Sep 2026)</dd>
+        </div>
+      </div>
+    </details>
+
+    <!-- CARD 5 -->
+    <details class="card" id="card-s5">
+      <summary>
+        <div>
+          <div class="stitle" data-i18n="s5_dd_title">5. Opsi mogok nasional buruh bongkar muat (TKBM) — belum terealisasi</div>
+          <div class="smeta">
+            <span class="badge-status monitor"><span class="dot"></span>Monitor</span>
+            <span data-i18n="s5_dd_meta">Nasional</span>
+          </div>
+        </div>
+        <div class="chev">+</div>
+      </summary>
+      <div class="card-body">
+        <div class="badge-row">
+          <span class="badge-status background"><span class="dot"></span>Regulatory</span>
+          <span class="badge-status background"><span class="dot"></span>Operational</span>
+          <span class="badge-level lvl-medium"><span class="bars"><i></i><i></i><i></i></span><span data-i18n="lbl_imp_md">Impact: Sedang</span></span>
+          <span class="badge-level lvl-low"><span class="bars"><i></i><i></i><i></i></span><span data-i18n="lbl_esc_lo">Escalation: Rendah</span></span>
+        </div>
+
+        <div class="subhead" data-i18n="sub_sit">Situation / Fact</div>
+        <div class="fact">
+          <span class="tiny-label" data-i18n="lbl_fact">Fact</span>
+          <p class="body-text" data-i18n="s5_fact">SP TKBM Indonesia membuka opsi mogok kerja nasional sejak 31 Juli apabila dialog kesejahteraan tidak direspons. Belum ada mogok nyata per 3 September.</p>
+        </div>
+
+        <div class="subhead" data-i18n="sub_inf">Risk Interpretation</div>
+        <div class="inference">
+          <span class="tiny-label" data-i18n="lbl_inf">Analytical Inference</span>
+          <p class="body-text" data-i18n="s5_inf">Isu ketenagakerjaan struktural yang belum tereskalasi menjadi aksi nyata. Relevan dipantau bagi terminal yang menggunakan penyedia stevedoring/TKBM pihak ketiga.</p>
+        </div>
+
+        <div class="relevance-block">
+          <span class="relevance-tag contextual">CONTEXTUALLY RELEVANT</span>
+          <div class="relevance-context" data-i18n="s5_rel"><b>Context:</b> Relevan bagi ekosistem pelabuhan yang menggunakan skema TKBM/koperasi. Relevansi langsung tergantung pada struktur PBM mitra PTI.</div>
+        </div>
+
+        <div class="subhead" data-i18n="lbl_wtw">What to Watch</div>
+        <ul class="clean-bullets" data-i18n="s5_wtw_list">
+          <li>Hasil dialog SP TKBM dengan Kementerian Terkait.</li>
+          <li>Potensi maklumat resmi penentuan tanggal mogok kerja.</li>
+        </ul>
+
+        <div class="kv">
+          <dt data-i18n="lbl_src_pri">Sumber utama</dt>
+          <dd><a href="https://jurnalpatrolinews.co.id/nasional/kesejahteraan-tak-kunjung-membaik-buruh-pelabuhan-buka-opsi-mogok-nasional/" target="_blank">Jurnal Patroli News — SP TKBM buka opsi mogok nasional</a> (31 Jul 2026)</dd>
+        </div>
+      </div>
+    </details>
+  </main>
+
+  <!-- VIEW 7: SOURCES -->
+  <main id="view-sources" class="view-pane">
+    <div class="panel full-panel">
+      <div class="section-label" style="margin-bottom:12px;" data-i18n="sec_sources">Library Verifikasi Sumber Intelijen Eksternal</div>
+      <p style="font-size:12.5px; color:var(--ink-dim); margin-bottom:18px;" data-i18n="src_sub">
+        Setiap item inteligensi disusun dari sumber terverifikasi. Klik tautan untuk membuka sumber dokumen asli.
+      </p>
+
+      <div class="src-cat" data-i18n="sc_1">1. Insiden Kapal &amp; Keselamatan Pelayaran</div>
+      <ul class="src-list">
+        <li><a href="https://www.antaranews.com/berita/5723672/kemenhub-sebut-dua-awak-tewas-akibat-kebakaran-kapal-di-sultra" target="_blank">ANTARA News — Kemenhub sebut dua awak tewas akibat kebakaran kapal LCT di Sultra (3 Sep 2026)</a></li>
+        <li><a href="https://news.republika.co.id/berita/tkrrzo487/dua-awak-tewas-akibat-kebakaran-kapal-dilaporkan-tenggelam-dan-bahan-kimia-tumpah" target="_blank">Republika — Dua awak tewas, kapal tenggelam &amp; bahan kimia tumpah (3 Sep 2026)</a></li>
+      </ul>
+
+      <div class="src-cat" data-i18n="sc_2">2. Cuaca Maritim &amp; Kegempaan (BMKG)</div>
+      <ul class="src-list">
+        <li><a href="https://ambon.antaranews.com/berita/342201/bmkg-imbau-nelayan-mewaspadai-gelombang-tinggi-hingga-4-meter" target="_blank">ANTARA News — BMKG imbau waspada gelombang tinggi hingga 4 meter (3 Sep 2026)</a></li>
+        <li><a href="https://maritim.bmkg.go.id/cuaca/peringatan/gelombang" target="_blank">BMKG Maritim — Peringatan Dini Gelombang Tinggi Resmi (Live)</a></li>
+        <li><a href="https://mediaindonesia.com/nusantara/929188/dua-gempa-dangkal-guncang-flores-bmkg-catat-11704-susulan" target="_blank">Media Indonesia — Gempa susulan Flores capai 11.704 kejadian (3 Sep 2026)</a></li>
+      </ul>
+
+      <div class="src-cat" data-i18n="sc_3">3. Energi, Ekonomi &amp; Geopolitik</div>
+      <ul class="src-list">
+        <li><a href="https://www.cnbcindonesia.com/research/20260831100938-128-763566/ini-hitung-hitungan-harga-bbm-per-1-september-2026-naik-atau-turun" target="_blank">CNBC Indonesia — Perhitungan harga BBM per 1 September 2026 (31 Aug 2026)</a></li>
+        <li><a href="https://id.tradingeconomics.com/commodity/crude-oil" target="_blank">Trading Economics — Harga Minyak Mentah World Benchmark (2 Sep 2026)</a></li>
+      </ul>
+
+      <div class="src-cat" data-i18n="sc_4">4. Regulatasi, Ketenagakerjaan &amp; Keamanan Maritim</div>
+      <ul class="src-list">
+        <li><a href="https://jurnalpatrolinews.co.id/nasional/kesejahteraan-tak-kunjung-membaik-buruh-pelabuhan-buka-opsi-mogok-nasional/" target="_blank">Jurnal Patroli News — SP TKBM Indonesia buka opsi mogok kerja nasional (31 Jul 2026)</a></li>
+        <li><a href="https://batam.tribunnews.com/kota-batam/692415/indonesia-malaysia-dan-singapura-komitmen-tekan-penyelundupan-dan-perompakan-di-selat-malaka" target="_blank">Tribun Batam — Kerjasama Trilateral Coast Guard Selat Malaka (Aug 2026)</a></li>
+      </ul>
+    </div>
+  </main>
+
+  <!-- METHODOLOGY COLLAPSIBLE -->
+  <details class="methodology">
+    <summary data-i18n="meth_title">Metodologi &amp; Batasan Intelijen Eksternal PTI ERM</summary>
+    <div class="m-body" data-i18n="meth_body">
+      Disusun sebagai lapisan intelijen eksternal PTI ERM. Fakta dan interpretasi dipisahkan secara eksplisit sesuai kerangka FACT / INFERENCE / SCENARIO. Estimasi dampak dan eskalasi menggunakan professional judgment berbasis evidence yang tersedia pada saat penyusunan (3 September 2026), bukan skor kuantitatif presisi. Klasifikasi relevansi PTI (Contextually Relevant / Watch Only) menjelaskan konteks bisnis yang relevan berdasarkan evidence eksternal, bukan konfirmasi kondisi internal PTI yang tidak diverifikasi. Untuk perkembangan lebih lanjut, verifikasi ulang disarankan sebelum digunakan dalam pengambilan keputusan formal.
+    </div>
+  </details>
+
+  <!-- FOOTER WITH DISCLAIMER (REVISION-01 REFINEMENT) -->
+  <footer>
+    <div data-i18n="foot_disclaimer">
+      <strong>Disclaimer:</strong> Intelijen eksternal disusun berdasarkan data publik terverifikasi pada snapshot terakhir (3 Sep 2026) dan memerlukan verifikasi kontekstual sebelum penggunaan keputusan formal.
+    </div>
+    <div style="font-size:10.5px; color:var(--ink-faint);" data-i18n="foot_copy">PTI ERM External Intelligence Platform v1.1</div>
+  </footer>
+
+</div>
+
+<!-- SCRIPT FOR SPA NAVIGATION, REFRESH ACTION & COMPLETE LANGUAGE SWITCHER -->
+<script>
+  // Complete Translation Dictionary (REVISION-01 Expansion)
+  const i18n = {
+    id: {
+      brand_sub: "External Risk Platform",
+      badge_manual_update: "Manual Update Required",
+      nav_overview: "Overview",
+      nav_landscape: "Landscape",
+      nav_signals: "Signals",
+      nav_geography: "Geography",
+      nav_watchlist: "Watchlist",
+      nav_deepdive: "Deep Dive",
+      nav_sources: "Sources",
+      mast_brand: "PT Pelabuhan Tegar Indonesia (PTI) — Enterprise Risk Management",
+      mast_title: "Daily Maritime & Port Risk Intelligence",
+      mast_sub: "External Business Environment Sensing Layer",
+      lbl_updated: "Diperbarui:",
+      val_date: "Kamis, 3 September 2026, pagi WIB",
+      lbl_window: "Window:",
+      val_window: "24–48 jam terakhir (tren 3 minggu)",
+      lbl_scope: "Scope:",
+      val_scope: "Indonesia (Marunda / Jawa, Sulawesi, NTT, Malaka)",
+      
+      spotlight_title: "Today's Intelligence Spotlight",
+      spotlight_date: "Snapshot: 3 September 2026",
+      spot_high_head: "2 ISU HIGH ATTENTION UTAMA",
+      spot_mon_head: "3 SINYAL MONITOR AKTIF",
+      spot_h1: "<strong>Kebakaran & Tenggelamnya LCT Legenda Nusantara 699</strong> di Selat Tiworo (Sultra) bermuatan bahan kimia; 2 tewas & pencemaran air laut.",
+      spot_h2: "<strong>Peringatan Gelombang Tinggi BMKG (hingga 4 Meter)</strong> di Laut Jawa, Selat Makassar & Lombok periode 2–5 September.",
+      spot_m1: "<strong>Kenaikan Harga BBM Non-Subsidi</strong> (Pertamina Dex/Dexlite per 1 Sep) dipicu eskalasi militer AS–Iran di Selat Hormuz.",
+      spot_m2: "<strong>Gempa Susulan NTT (11.704 kejadian)</strong> pascagempa M7,7; aktivitas dilaporkan BMKG terus meluruh.",
+      spot_m3: "<strong>Opsi Mogok Kerja Nasional Buruh TKBM</strong> atas tuntutan kesejahteraan; belum terealisasi.",
+
+      sec_kpi: "A. Ringkasan Landscape Risiko",
+      kpi_total: "Meaningful Developments Today",
+      kpi_high: "High Attention",
+      kpi_monitor: "Monitor",
+      kpi_background: "Background",
+      kpi_cross: "Cross-Category Signals",
+      kpi_note: "Baseline snapshot — perbandingan awal",
+      tip_kpi_total: "Perkembangan eksternal yang dievaluasi hari ini yang memiliki bukti dan nilai analisis memadai.",
+      tip_kpi_high: "Perkembangan yang membutuhkan perhatian lebih tinggi berdasarkan relevansi dan bukti yang ada.",
+      tip_kpi_monitor: "Perkembangan relevan di bawah pengamatan tanpa ancaman eskalasi langsung.",
+      tip_kpi_background: "Perkembangan kontekstual dengan signifikansi terbatas atau keterpaparan langsung yang rendah.",
+      tip_kpi_cross: "Perkembangan yang diklasifikasikan di bawah beberapa domain risiko sekaligus.",
+      
+      sec_mgmt: "B. Executive Management Awareness",
+      mgmt_high_title: "Prioritas High Attention",
+      mgmt_mon_title: "Active Watch List",
+      mgmt_info_title: "Informasi & Konteks",
+      mgmt_h1: "Insiden kebakaran/tumpahan kimia LCT Legenda Nusantara 699 — relevan sebagai preseden HSS & lingkungan untuk kargo curah cair/kimia.",
+      mgmt_h2: "Peringatan gelombang tinggi nasional 2–5 September — perlu pemantauan bersinggungan dengan jalur pelayaran armada PTI.",
+      mgmt_m1: "Tren kenaikan harga BBM non-subsidi (Dexlite/Pertamina Dex) akibat eskalasi Timur Tengah.",
+      mgmt_m2: "Status gempa susulan NTT dan pemulihan infrastruktur pelabuhan pasca M7,7.",
+      mgmt_m3: "Perkembangan dialog SP TKBM nasional terkait opsi mogok buruh bongkar muat.",
+      mgmt_i1: "Kerja sama trilateral coast guard Indonesia–Malaysia–Singapura di Selat Malaka.",
+      mgmt_i2: "Tidak ada insiden baru terverifikasi di Laut Natuna Utara dalam 48 jam terakhir.",
+      mgmt_disclaimer: "Lapisan intelijen eksternal ini tidak menggantikan Risk Register internal, RCSA, atau proses eskalasi formal PTI. Penentuan tindak lanjut formal tetap memerlukan verifikasi kontekstual oleh fungsi ERM.",
+      
+      sec_heatmap: "Risk Heatmap — Impact × Escalation",
+      esc_lo: "Escalation<br>Rendah",
+      esc_md: "Escalation<br>Sedang",
+      esc_hi: "Escalation<br>Tinggi",
+      imp_hi: "Impact<br>Tinggi",
+      imp_md: "Impact<br>Sedang",
+      imp_lo: "Impact<br>Rendah",
+      chip_s1: "Kebakaran & tumpahan LCT",
+      chip_s2: "Gelombang tinggi nasional",
+      chip_s3: "Eskalasi Tim-Teng / BBM",
+      chip_s4: "Aftershock NTT (meluruh)",
+      chip_s5: "Opsi mogok TKBM",
+      lg_high: "High Attention",
+      lg_monitor: "Monitor",
+      lg_background: "Background",
+      heatmap_note: "Klik chip untuk langsung menelaah analisis sinyal pada Deep Dive. Penempatan berbasis evidence yang tersedia hari ini dan professional judgment.",
+      
+      sec_trends: "Tren Tema Risiko",
+      tip_trends: "<b>Increasing</b> — aktivitas sinyal meningkat.<br><b>Stable</b> — persisten tanpa perubahan material.<br><b>Seasonal</b> — pola musiman berulang.<br><b>Decreasing</b> — dampak sinyal menurun.<br><b>Uncertain</b> — arah durasi belum pasti.",
+      tr_1: "Kecelakaan kapal / kebakaran & tumpahan muatan",
+      tr_2: "Gelombang tinggi & cuaca pelayaran",
+      tr_3: "Harga BBM non-subsidi / biaya energi",
+      tr_4: "Gempa NTT & infrastruktur pelabuhan",
+      tr_5: "Ketegangan tenaga kerja bongkar muat (TKBM)",
+      tr_6: "Insiden Laut Natuna Utara & Selat Malaka",
+      tag_up: "↑ Increasing",
+      tag_down: "↓ Decreasing",
+      tag_stable: "→ Stable / Persistent",
+      tag_seasonal: "→ Seasonal / Cyclical",
+      tag_uncertain: "? Uncertain",
+      
+      sec_ranking: "Ranking Sinyal Risiko Utama Hari Ini",
+      flt_all: "Semua Sinyal (5)",
+      flt_high: "High Attention (2)",
+      flt_mon: "Monitor (3)",
+      scroll_hint: "→ Geser tabel untuk melihat kolom lainnya",
+      th_signal: "Sinyal",
+      th_category: "Kategori",
+      th_location: "Lokasi",
+      th_impact: "Impact",
+      th_escalation: "Escalation",
+      th_trend: "Tren",
+      th_status: "Status",
+      s1_title: "1. Kebakaran & tumpahan kimia — LCT Legenda Nusantara 699",
+      s1_loc: "Selat Tiworo, Sultra",
+      s2_title: "2. Peringatan gelombang tinggi hingga 4 m (2–5 Sep)",
+      s2_loc: "Nasional (multi-perairan)",
+      s3_title: "3. Eskalasi Timur Tengah → harga BBM non-subsidi naik",
+      s3_loc: "Internasional → Domestik",
+      s4_title: "4. Gempa susulan NTT & pemulihan infrastruktur pelabuhan",
+      s4_loc: "NTT (Flores)",
+      s5_title: "5. Opsi mogok nasional TKBM (belum terealisasi)",
+      s5_loc: "Nasional",
+      lvl_hi: "Tinggi",
+      lvl_md: "Sedang",
+      lvl_lo: "Rendah",
+      lvl_md_loc: "Sedang (lokal)",
+      
+      sec_geo: "Sebaran Geografis Sinyal External Risk",
+      th_region: "Wilayah / Jalur",
+      th_event: "Sinyal / Kejadian",
+      th_note: "Catatan Singkat",
+      geo_r1: "Selat Tiworo, Kabaena (Sultra)",
+      geo_e1: "Kebakaran & tenggelamnya LCT bermuatan kimia; 2 tewas; tumpahan bahan kimia ke laut",
+      geo_n1: "Insiden aktif, penanganan tumpahan lingkungan sedang berlangsung",
+      geo_r2: "Laut Jawa, Selat Makassar, Bali & Lombok",
+      geo_e2: "Gelombang 2,5–4 m, angin hingga 31 knot, periode 2–5 September",
+      geo_n2: "Berlaku luas nasional; risiko utama pelayaran tongkang & kapal kecil-menengah",
+      geo_r3: "Nusa Tenggara Timur (Flores)",
+      geo_e3: "11.704 gempa susulan pascagempa M7,7 (15 Agu); pemulihan Maumere",
+      geo_n3: "Tren meluruh; stabilisasi diperkirakan akhir September",
+      geo_r4: "Selat Hormuz → Domestik",
+      geo_e4: "Eskalasi AS–Iran; Brent >US$90/barel → harga BBM non-subsidi naik",
+      geo_n4: "Transmisi via harga solar industri / BBM non-subsidi per 1 September",
+      geo_r5: "Pelabuhan Nasional (Skema TKBM)",
+      geo_e5: "Opsi mogok nasional buruh bongkar muat atas tuntutan kesejahteraan",
+      geo_n5: "Belum terealisasi; dialog masih berlangsung sejak akhir Juli",
+      geo_r6: "Selat Malaka / Laut Natuna Utara",
+      geo_e6: "Tidak ada insiden baru terverifikasi 24–48 jam terakhir",
+      geo_n6: "Kerja sama trilateral coast guard tetap relevan sebagai konteks struktural",
+      
+      sec_watch: "Watchlist — Titik Pantau Aktif & Indikator Eskalasi",
+      w1_title: "Kecelakaan Kapal Muatan Berbahaya (Kimia/Curah Cair)",
+      w1_wtw: "Frekuensi kejadian kebakaran/tenggelam kapal muatan B3 per triwulan; hasil investigasi resmi Ditjen Hubla.",
+      w1_trg: "Insiden serupa berulang dalam radius operasional PTI atau melibatkan vendor kapal sejenis.",
+      w2_title: "Cuaca Ekstrem & Gelombang Tinggi Pelayaran",
+      w2_wtw: "Peringatan dini harian BMKG Maritim untuk perairan Jawa, Selat Makassar & Lombok.",
+      w2_trg: "Perpanjangan periode peringatan melewati 5 September atau kenaikan tinggi gelombang >4 meter.",
+      w3_title: "Harga BBM Non-Subsidi & Geopolitik Timur Tengah",
+      w3_wtw: "Pergerakan harga minyak Brent/ICP; penyesuaian harga BBM non-subsidi Pertamina bulanan.",
+      w3_trg: "Brent bertahan >US$95/barel selama >1 bulan; penutupan fisik Selat Hormuz / Selat Malaka.",
+      w4_title: "Ketenagakerjaan & Opsi Mogok Buruh TKBM",
+      w4_wtw: "Hasil dialog SP TKBM Indonesia dengan Kementerian Terkait (Hubla/Naker).",
+      w4_trg: "Pengumuman resmi tanggal mogok kerja nasional atau aksi lokal di pelabuhan sejenis.",
+      lbl_wtw: "What to Watch",
+      lbl_dir: "Current Direction",
+      lbl_trg: "Trigger / Escalation Indicator",
+      
+      sec_dd: "Deep-Dive — Analisis Sinyal Material",
+      sub_sit: "Situation / Fact",
+      sub_inf: "Risk Interpretation",
+      sub_trans: "PTI Context — Transmission Mechanism",
+      lbl_fact: "Fact",
+      lbl_inf: "Analytical Inference",
+      lbl_imp_hi: "Impact: Tinggi",
+      lbl_imp_md: "Impact: Sedang",
+      lbl_imp_loc: "Impact: Sedang (Lokal)",
+      lbl_esc_hi: "Escalation: Tinggi",
+      lbl_esc_md: "Escalation: Sedang",
+      lbl_esc_lo: "Escalation: Rendah",
+      lbl_src_pri: "Sumber utama",
+
+      s1_dd_title: "1. Kebakaran & tenggelamnya LCT Legenda Nusantara 699 (bermuatan kimia)",
+      s1_dd_meta: "Selat Tiworo, Kabaena, Sultra · 1–3 September 2026",
+      s1_fact: "Kapal LCT Legenda Nusantara 699 pengangkut bahan kimia terbakar di Perairan Kabaena, Selat Tiworo, Sultra pada 1 September 2026. Dari 13 POB, 2 tewas, 4 dirawat intensif, 7 selamat. Kapal dilaporkan tenggelam dan bahan kimia tumpah ke laut. UPP Kelas II Raha berkoordinasi menangani dampak lingkungan.",
+      s1_inf: "Kombinasi korban jiwa, tenggelamnya armada, dan pencemaran kimia menjadikannya insiden multi-dimensi. Bagian dari tren berulang kecelakaan armada domestik non-migas sepanjang 2026 — mengindikasikan kerentanan sistemik pada armada curah/kimia skala kecil-menengah.",
+      s1_fl1: "Insiden kebakaran/tumpahan B3 kapal LCT",
+      s1_fl2: "Preseden risiko HSS & lingkungan kargo curah cair/kimia",
+      s1_fl3: "Relevan bagi terminal multipurpose pemroses kargo serupa",
+      s1_fl4: "Implikasi: Pengetatan SOP B3 & kesiapan tanggap darurat tumpahan",
+      s1_rel: "<b>Context:</b> Relevan bagi operator pelabuhan/terminal multipurpose yang menangani kargo curah cair/kimia atau armada vendor sejenis. Belum terdapat evidence yang menghubungkan insiden ini secara langsung dengan operasi internal PTI.",
+      s1_wtw_list: "<li>Hasil investigasi resmi Ditjen Hubla &amp; KNKT mengenai penyebab kebakaran.</li><li>Skala dan durasi dampak pencemaran lingkungan di Selat Tiworo.</li><li>Evaluasi standar keselamatan pelayaran kapal LCT curah cair/kimia domestik.</li>",
+
+      s2_dd_title: "2. Peringatan gelombang tinggi hingga 4 meter (2–5 September 2026)",
+      s2_dd_meta: "Multi-perairan nasional · BMKG Maritim",
+      s2_fact: "BMKG mengeluarkan peringatan resmi gelombang tinggi hingga 4 meter di Laut Jawa, Selat Makassar selatan, Selat Bali & Lombok periode 2–5 September dipicu angin timur-tenggara 5–31 knot. Risiko utama pada pelayaran tongkang & kapal barang kecil-menengah.",
+      s2_inf: "Pola musiman peralihan angin dengan dampak simultan di lintas perairan utama Indonesia. Berpotensi mengganggu ketepatan waktu jadwal sandar (vessel turnaround) dan tongkang kargo di berbagai pelabuhan.",
+      s2_fl1: "Gelombang tinggi & angin kencang multi-perairan",
+      s2_fl2: "Penundaan pemanduan / olah gerak kapal & tongkang",
+      s2_fl3: "Potensi keterlambatan kedatangan kapal di pelabuhan",
+      s2_fl4: "Potensi fluktuasi utilisasi dermaga & penumpukan yard",
+      s2_rel: "<b>Context:</b> Relevan bagi terminal yang menerima alur pelayaran dari kawasan Laut Jawa dan sekitarnya. Tingkat dampak langsung pada jadwal berthing PTI tergantung pada armada kapal aktif hari ini.",
+      s2_wtw_list: "<li>Pembaruan harian peringatan cuaca BMKG Maritim.</li><li>Potensi perpanjangan gelombang tinggi melewati 5 September.</li><li>Laporan gangguan/penundaan pelayaran armada tongkang di Laut Jawa.</li>",
+
+      s3_dd_title: "3. Eskalasi militer Timur Tengah mendorong kenaikan harga BBM non-subsidi",
+      s3_dd_meta: "Selat Hormuz / global → domestik",
+      s3_fact: "Konflik militer dekat Selat Hormuz menaikkan harga Brent ke >US$90/barel (+12,8% bulanan). Efektif 1 September 2026, Pertamina menaikkan harga BBM non-subsidi (Pertamina Dex, Dexlite), sementara BBM subsidi dipertahankan.",
+      s3_inf: "Tren biaya energi yang meningkat berkelanjutan. Jalur transmisi utama ke pelabuhan adalah kenaikan biaya solar industri / BBM non-subsidi untuk alat berat bongkar muat dan genset pendukung operasional.",
+      s3_fl1: "Eskalasi geopolitik Selat Hormuz",
+      s3_fl2: "Kenaikan harga minyak mentah & ICP",
+      s3_fl3: "Penyesuaian harga BBM non-subsidi domestik",
+      s3_fl4: "Tekanan pada OPEX BBM alat berat & genset pelabuhan",
+      s3_rel: "<b>Context:</b> Relevan bagi operator pelabuhan yang mengonsumsi solar non-subsidi untuk operasional alat bongkar muat/genset. Besaran implikasi biaya memerlukan data konsumsi BBM internal.",
+      s3_wtw_list: "<li>Stabilitas jalur pelayaran Selat Hormuz.</li><li>Pergerakan harga minyak mentah Brent &amp; ICP bulanan.</li><li>Pengumuman penyesuaian harga BBM Pertamina berikutnya per 1 Oktober.</li>",
+
+      s4_dd_title: "4. Gempa susulan NTT masih berlangsung, tren meluruh",
+      s4_dd_meta: "Flores, NTT",
+      s4_fact: "Pascagempa M7,7 di Flores (15 Agu), BMKG mencatat 11.704 gempa susulan hingga 3 September dengan tren meluruh dan diperkirakan stabil akhir September.",
+      s4_inf: "Risiko dalam fase pemulihan (recovery phase), bukan eskalasi baru. Menjadi rujukan preseden ketahanan infrastruktur pelabuhan pesisir terhadap aktivitas seismik.",
+      s4_rel: "<b>Context:</b> Preseden BCP (Business Continuity Plan) infrastruktur pelabuhan. Tidak ada keterkaitan operasional langsung dengan fasilitas PTI.",
+      s4_wtw_list: "<li>Update frekuensi gempa susulan mingguan dari BMKG.</li><li>Perkembangan perbaikan fasilitas Pelabuhan Maumere.</li>",
+
+      s5_dd_title: "5. Opsi mogok nasional buruh bongkar muat (TKBM) — belum terealisasi",
+      s5_dd_meta: "Nasional",
+      s5_fact: "SP TKBM Indonesia membuka opsi mogok kerja nasional sejak 31 Juli apabila dialog kesejahteraan tidak direspons. Belum ada mogok nyata per 3 September.",
+      s5_inf: "Isu ketenagakerjaan struktural yang belum tereskalasi menjadi aksi nyata. Relevan dipantau bagi terminal yang menggunakan penyedia stevedoring/TKBM pihak ketiga.",
+      s5_rel: "<b>Context:</b> Relevan bagi ekosistem pelabuhan yang menggunakan skema TKBM/koperasi. Relevansi langsung tergantung pada struktur PBM mitra PTI.",
+      s5_wtw_list: "<li>Hasil dialog SP TKBM dengan Kementerian Terkait.</li><li>Potensi maklumat resmi penentuan tanggal mogok kerja.</li>",
+
+      sec_sources: "Library Verifikasi Sumber Intelijen Eksternal",
+      src_sub: "Setiap item inteligensi disusun dari sumber terverifikasi. Klik tautan untuk membuka sumber dokumen asli.",
+      sc_1: "1. Insiden Kapal & Keselamatan Pelayaran",
+      sc_2: "2. Cuaca Maritim & Kegempaan (BMKG)",
+      sc_3: "3. Energi, Ekonomi & Geopolitik",
+      sc_4: "4. Regulasi, Ketenagakerjaan & Keamanan Maritim",
+
+      meth_title: "Metodologi & Batasan Intelijen Eksternal PTI ERM",
+      meth_body: "Disusun sebagai lapisan intelijen eksternal PTI ERM. Fakta dan interpretasi dipisahkan secara eksplisit sesuai kerangka FACT / INFERENCE / SCENARIO. Estimasi dampak dan eskalasi menggunakan professional judgment berbasis evidence yang tersedia pada saat penyusunan (3 September 2026), bukan skor kuantitatif presisi. Klasifikasi relevansi PTI (Contextually Relevant / Watch Only) menjelaskan konteks bisnis yang relevan berdasarkan evidence eksternal, bukan konfirmasi kondisi internal PTI yang tidak diverifikasi. Untuk perkembangan lebih lanjut, verifikasi ulang disarankan sebelum digunakan dalam pengambilan keputusan formal.",
+      
+      foot_disclaimer: "<strong>Disclaimer:</strong> Intelijen eksternal disusun berdasarkan data publik terverifikasi pada snapshot terakhir (3 Sep 2026) dan memerlukan verifikasi kontekstual sebelum penggunaan keputusan formal.",
+      foot_copy: "PTI ERM External Intelligence Platform v1.1"
+    },
+    en: {
+      brand_sub: "External Risk Platform",
+      badge_manual_update: "Manual Update Required",
+      nav_overview: "Overview",
+      nav_landscape: "Landscape",
+      nav_signals: "Signals",
+      nav_geography: "Geography",
+      nav_watchlist: "Watchlist",
+      nav_deepdive: "Deep Dive",
+      nav_sources: "Sources",
+      mast_brand: "PT Pelabuhan Tegar Indonesia (PTI) — Enterprise Risk Management",
+      mast_title: "Daily Maritime & Port Risk Intelligence",
+      mast_sub: "External Business Environment Sensing Layer",
+      lbl_updated: "Updated:",
+      val_date: "Thursday, September 3, 2026, morning WIB",
+      lbl_window: "Window:",
+      val_window: "Last 24–48 hours (3-week trend context)",
+      lbl_scope: "Scope:",
+      val_scope: "Indonesia (Marunda / Java, Sulawesi, NTT, Malacca)",
+      
+      spotlight_title: "Today's Intelligence Spotlight",
+      spotlight_date: "Snapshot: September 3, 2026",
+      spot_high_head: "2 HIGH ATTENTION DEVELOPMENTS",
+      spot_mon_head: "3 ACTIVE MONITOR SIGNALS",
+      spot_h1: "<strong>Chemical Carrier LCT Legenda Nusantara 699 Fire & Sinking</strong> in Tiworo Strait (SE Sulawesi); 2 casualties & marine chemical spill.",
+      spot_h2: "<strong>BMKG High Wave Warning (Up to 4 Meters)</strong> in Java Sea, Makassar & Lombok Straits for Sep 2–5.",
+      spot_m1: "<strong>Non-Subsidized Fuel Price Increase</strong> (Pertamina Dex/Dexlite as of Sep 1) driven by US–Iran escalation in Strait of Hormuz.",
+      spot_m2: "<strong>NTT Earthquake Aftershocks (11,704 events)</strong> post-M7.7 earthquake; BMKG reports ongoing activity decay.",
+      spot_m3: "<strong>Unrealized National Port Labor (TKBM) Strike Option</strong> over welfare demands.",
+
+      sec_kpi: "A. Risk Landscape Summary",
+      kpi_total: "Meaningful Developments Today",
+      kpi_high: "High Attention",
+      kpi_monitor: "Monitor",
+      kpi_background: "Background",
+      kpi_cross: "Cross-Category Signals",
+      kpi_note: "Baseline snapshot — initial comparison",
+      tip_kpi_total: "External developments assessed today carrying sufficient evidence and analytical value.",
+      tip_kpi_high: "Developments currently warranting elevated attention based on relevance and evidence.",
+      tip_kpi_monitor: "Relevant developments under observation without immediate elevated threat.",
+      tip_kpi_background: "Useful contextual developments with limited current significance or direct exposure.",
+      tip_kpi_cross: "Developments classified under multiple risk domains simultaneously.",
+      
+      sec_mgmt: "B. Executive Management Awareness",
+      mgmt_high_title: "High Attention Priority",
+      mgmt_mon_title: "Active Watch List",
+      mgmt_info_title: "Information & Context",
+      mgmt_h1: "Fire/chemical spill incident on LCT Legenda Nusantara 699 — relevant HSS & environmental precedent for liquid bulk/chemical cargo.",
+      mgmt_h2: "National high wave warning Sep 2–5 — requires monitoring where overlapping with PTI vessel routing.",
+      mgmt_m1: "Rising non-subsidized fuel prices (Dexlite/Pertamina Dex) driven by Middle East escalation.",
+      mgmt_m2: "NTT aftershock decay status and post-M7.7 port infrastructure recovery.",
+      mgmt_m3: "National TKBM union dialogue status regarding potential port worker strike option.",
+      mgmt_i1: "Indonesia–Malaysia–Singapore trilateral coast guard patrol cooperation in Malacca Strait.",
+      mgmt_i2: "No new verified incidents in North Natuna Sea in the last 48 hours.",
+      mgmt_disclaimer: "This external intelligence layer does not replace internal Risk Register, RCSA, or formal PTI escalation processes. Formal follow-up requires contextual verification by ERM.",
+      
+      sec_heatmap: "Risk Heatmap — Impact × Escalation",
+      esc_lo: "Escalation<br>Low",
+      esc_md: "Escalation<br>Medium",
+      esc_hi: "Escalation<br>High",
+      imp_hi: "Impact<br>High",
+      imp_md: "Impact<br>Medium",
+      imp_lo: "Impact<br>Low",
+      chip_s1: "LCT Fire & Chemical Spill",
+      chip_s2: "National High Wave Warning",
+      chip_s3: "Mid-East Escalation / Fuel",
+      chip_s4: "NTT Aftershocks (Decaying)",
+      chip_s5: "TKBM Strike Option",
+      lg_high: "High Attention",
+      lg_monitor: "Monitor",
+      lg_background: "Background",
+      heatmap_note: "Click any chip to directly explore signal analysis in Deep Dive. Placement based on available evidence today and professional judgment.",
+      
+      sec_trends: "Risk Theme Trends",
+      tip_trends: "<b>Increasing</b> — signal activity increasing.<br><b>Stable</b> — persistent without material change.<br><b>Seasonal</b> — recurring cyclical pattern.<br><b>Decreasing</b> — declining signal impact.<br><b>Uncertain</b> — trajectory not yet clear.",
+      tr_1: "Vessel accidents / fire & cargo spill",
+      tr_2: "High waves & maritime weather risks",
+      tr_3: "Non-subsidized fuel prices / energy costs",
+      tr_4: "NTT earthquakes & port infrastructure",
+      tr_5: "Stevedoring labor tension (TKBM)",
+      tr_6: "North Natuna Sea & Malacca Strait incidents",
+      tag_up: "↑ Increasing",
+      tag_down: "↓ Decreasing",
+      tag_stable: "→ Stable / Persistent",
+      tag_seasonal: "→ Seasonal / Cyclical",
+      tag_uncertain: "? Uncertain",
+      
+      sec_ranking: "Today's Key Risk Signal Ranking",
+      flt_all: "All Signals (5)",
+      flt_high: "High Attention (2)",
+      flt_mon: "Monitor (3)",
+      scroll_hint: "→ Scroll table horizontally to view remaining columns",
+      th_signal: "Signal",
+      th_category: "Category",
+      th_location: "Location",
+      th_impact: "Impact",
+      th_escalation: "Escalation",
+      th_trend: "Trend",
+      th_status: "Status",
+      s1_title: "1. Chemical Spill & Fire — LCT Legenda Nusantara 699",
+      s1_loc: "Tiworo Strait, SE Sulawesi",
+      s2_title: "2. High Wave Warning up to 4 m (Sep 2–5)",
+      s2_loc: "National (Multi-waterway)",
+      s3_title: "3. Mid-East Escalation → Non-Subsidized Fuel Price Increase",
+      s3_loc: "International → Domestic",
+      s4_title: "4. NTT Aftershocks & Port Infrastructure Recovery",
+      s4_loc: "NTT (Flores)",
+      s5_title: "5. National TKBM Labor Strike Option (Unrealized)",
+      s5_loc: "National",
+      lvl_hi: "High",
+      lvl_md: "Medium",
+      lvl_lo: "Low",
+      lvl_md_loc: "Medium (Local)",
+      
+      sec_geo: "Geographic Distribution of External Signals",
+      th_region: "Region / Waterway",
+      th_event: "Signal / Event",
+      th_note: "Brief Note",
+      geo_r1: "Tiworo Strait, Kabaena (SE Sulawesi)",
+      geo_e1: "Fire & sinking of chemical LCT; 2 fatalities; marine chemical spill",
+      geo_n1: "Active incident; environmental spill response ongoing",
+      geo_r2: "Java Sea, Makassar Strait, Bali & Lombok",
+      geo_e2: "Waves 2.5–4 m, winds to 31 knots, Sep 2–5 period",
+      geo_n2: "Broad national scope; primary risk for barge & small-to-mid shipping",
+      geo_r3: "Nusa Tenggara Timur (Flores)",
+      geo_e3: "11,704 aftershocks post-M7.7 earthquake (Aug 15); Maumere recovery",
+      geo_n3: "Decaying trend; stabilization expected late September",
+      geo_r4: "Strait of Hormuz → Domestic",
+      geo_e4: "US–Iran escalation; Brent >$90/bbl → non-subsidized fuel increase",
+      geo_n4: "Transmitted via industrial diesel / non-subsidized fuel as of Sep 1",
+      geo_r5: "National Ports (TKBM Scheme)",
+      geo_e5: "National port labor strike option over welfare demands",
+      geo_n5: "Unrealized; ongoing dialogue since late July",
+      geo_r6: "Malacca Strait / North Natuna Sea",
+      geo_e6: "No new verified incidents in last 24–48 hours",
+      geo_n6: "Trilateral coast guard cooperation remains relevant structural context",
+      
+      sec_watch: "Watchlist — Active Monitoring Points & Escalation Triggers",
+      w1_title: "Hazardous Cargo Vessel Accidents (Chemical/Liquid Bulk)",
+      w1_wtw: "Quarterly frequency of HAZMAT vessel fires/sinkings; official Hubla investigation results.",
+      w1_trg: "Recurring similar incidents within PTI operational radius or involving similar vendor vessels.",
+      w2_title: "Extreme Maritime Weather & High Waves",
+      w2_wtw: "Daily BMKG Maritime warnings for Java Sea, Makassar Strait & Lombok Strait.",
+      w2_trg: "Extension of warning period past Sep 5 or wave height elevation >4 meters.",
+      w3_title: "Non-Subsidized Fuel Prices & Middle East Geopolitics",
+      w3_wtw: "Brent/ICP monthly crude movements; Pertamina monthly non-subsidized fuel adjustments.",
+      w3_trg: "Brent sustained >US$95/barrel for >1 month; physical closure of Strait of Hormuz / Malacca.",
+      w4_title: "Port Labor Welfare & TKBM Strike Option",
+      w4_wtw: "Dialogue outcomes between SP TKBM union and relevant Ministries (Transport/Labor).",
+      w4_trg: "Official announcement of national strike date or local strikes at peer ports.",
+      lbl_wtw: "What to Watch",
+      lbl_dir: "Current Direction",
+      lbl_trg: "Trigger / Escalation Indicator",
+      
+      sec_dd: "Deep-Dive — Material Signal Analysis",
+      sub_sit: "Situation / Fact",
+      sub_inf: "Risk Interpretation",
+      sub_trans: "PTI Context — Transmission Mechanism",
+      lbl_fact: "Fact",
+      lbl_inf: "Analytical Inference",
+      lbl_imp_hi: "Impact: High",
+      lbl_imp_md: "Impact: Medium",
+      lbl_imp_loc: "Impact: Medium (Local)",
+      lbl_esc_hi: "Escalation: High",
+      lbl_esc_md: "Escalation: Medium",
+      lbl_esc_lo: "Escalation: Low",
+      lbl_src_pri: "Primary source",
+
+      s1_dd_title: "1. Chemical Carrier LCT Legenda Nusantara 699 Fire & Sinking",
+      s1_dd_meta: "Tiworo Strait, Kabaena, SE Sulawesi · Sep 1–3, 2026",
+      s1_fact: "LCT Legenda Nusantara 699 carrying chemical cargo caught fire off Kabaena Island, Tiworo Strait on September 1, 2026. Out of 13 POB, 2 died, 4 in intensive care, 7 survived. The vessel sank post-fire with chemical spill into marine waters. Transport Ministry Class II Raha UPP coordinating environmental response.",
+      s1_inf: "Combination of fatalities, vessel loss, and chemical pollution makes this a multi-dimensional incident. Part of a recurring pattern in domestic non-oil bulk shipping accidents in 2026, indicating systemic vulnerability in small-to-mid chemical/bulk vessels.",
+      s1_fl1: "LCT HAZMAT fire & chemical spill incident",
+      s1_fl2: "HSS & environmental risk precedent for liquid bulk/chemical cargo",
+      s1_fl3: "Relevant for multipurpose terminal handling similar cargo",
+      s1_fl4: "Implication: HAZMAT SOP enforcement & spill response readiness",
+      s1_rel: "<b>Context:</b> Relevant for multipurpose port/terminal operators handling liquid bulk/chemical cargo or operating similar vendor vessels. No direct evidence currently linking this incident to internal PTI operations.",
+      s1_wtw_list: "<li>Official investigation report from Hubla Directorate &amp; KNKT regarding fire cause.</li><li>Scale and duration of marine environmental impact in Tiworo Strait.</li><li>Safety SOP evaluations for domestic chemical LCT vessels.</li>",
+
+      s2_dd_title: "2. High Wave Warning up to 4 Meters (September 2–5, 2026)",
+      s2_dd_meta: "National Multi-Waterways · BMKG Maritime",
+      s2_fact: "BMKG issued an official high wave warning up to 4 meters across Java Sea, southern Makassar Strait, Bali & Lombok Straits for September 2–5 triggered by E-SE winds of 5–31 knots. Primary risk targets barges & small-to-medium cargo vessels.",
+      s2_inf: "Seasonal wind transition pattern with simultaneous impact across major Indonesian shipping channels. Potential to disrupt vessel turnaround times and cargo barge schedules across multiple ports.",
+      s2_fl1: "Multi-waterway high wave & strong wind conditions",
+      s2_fl2: "Pilotage & navigation delays for barges & small vessels",
+      s2_fl3: "Potential vessel arrival delays at destination ports",
+      s2_fl4: "Potential berth utilization fluctuations & yard accumulation",
+      s2_rel: "<b>Context:</b> Relevant for terminals receiving shipping traffic connected to Java Sea corridors. Direct impact on PTI berthing schedule depends on active fleet traffic today.",
+      s2_wtw_list: "<li>Daily BMKG Maritime weather warning updates.</li><li>Potential extension of high wave warnings past September 5.</li><li>Reported barge navigation delays across Java Sea shipping lanes.</li>",
+
+      s3_dd_title: "3. Middle East Military Escalation Driving Non-Subsidized Fuel Price Increase",
+      s3_dd_meta: "Strait of Hormuz / Global → Domestic",
+      s3_fact: "Military conflict near Strait of Hormuz drove Brent crude above $90/bbl (+12.8% monthly). Effective September 1, 2026, Pertamina increased non-subsidized fuel prices (Pertamina Dex, Dexlite), while subsidized fuel prices were maintained.",
+      s3_inf: "Sustained upward energy cost trend. Primary transmission pathway to port operations is increased industrial diesel / non-subsidized fuel costs for cargo handling heavy equipment and power generators.",
+      s3_fl1: "Strait of Hormuz geopolitical escalation",
+      s3_fl2: "Global crude oil & ICP price increase",
+      s3_fl3: "Domestic non-subsidized fuel price adjustment",
+      s3_fl4: "OPEX pressure on port heavy equipment & generator fuel",
+      s3_rel: "<b>Context:</b> Relevant for port operators consuming non-subsidized diesel for heavy equipment/generators. Financial impact magnitude requires internal fuel consumption data.",
+      s3_wtw_list: "<li>Strait of Hormuz shipping lane stability.</li><li>Monthly Brent crude &amp; ICP price movements.</li><li>Pertamina's next monthly fuel price adjustment announcement on October 1.</li>",
+
+      s4_dd_title: "4. NTT Aftershocks Ongoing, Decaying Trend",
+      s4_dd_meta: "Flores, NTT",
+      s4_fact: "Following the M7.7 main shock in Flores (Aug 15), BMKG recorded 11,704 aftershocks through September 3, exhibiting a decaying trend with expected stabilization by late September.",
+      s4_inf: "Risk is in recovery phase rather than new escalation. Serves as a risk precedent for coastal port infrastructure resilience against seismic activity.",
+      s4_rel: "<b>Context:</b> Port infrastructure Business Continuity Plan (BCP) precedent. No direct operational link to PTI facilities.",
+      s4_wtw_list: "<li>Weekly BMKG aftershock frequency updates.</li><li>Recovery progress at Maumere Port facilities.</li>",
+
+      s5_dd_title: "5. National Port Labor (TKBM) Strike Option — Unrealized",
+      s5_dd_meta: "National",
+      s5_fact: "SP TKBM union opened a national strike option on July 31 if welfare dialogues were not met. No actual strike has materialized as of September 3.",
+      s5_inf: "Structural labor issue that has not escalated into actual action. Relevant to monitor for terminals using third-party stevedoring/TKBM arrangements.",
+      s5_rel: "<b>Context:</b> Relevant for port ecosystems relying on TKBM/cooperative labor schemes. Direct relevance depends on PTI's PBM partner structure.",
+      s5_wtw_list: "<li>Outcome of SP TKBM dialogue with relevant Ministries.</li><li>Potential official announcement of strike dates.</li>",
+
+      sec_sources: "External Intelligence Source Verification Library",
+      src_sub: "Every intelligence item is derived from verified sources. Click links to access original source documents.",
+      sc_1: "1. Vessel Accidents & Maritime Safety",
+      sc_2: "2. Maritime Weather & Seismology (BMKG)",
+      sc_3: "3. Energy, Economy & Geopolitics",
+      sc_4: "4. Regulation, Labor & Maritime Security",
+
+      meth_title: "PTI ERM External Intelligence Methodology & Guardrails",
+      meth_body: "Constructed as an external intelligence sensing layer for PTI ERM. Facts and interpretations are explicitly segregated under the FACT / INFERENCE / SCENARIO framework. Impact and escalation estimates rely on evidence-based professional judgment as of September 3, 2026. PTI Relevance classifications (Contextually Relevant / Watch Only) explain contextual business relevance based on external evidence without manufacturing unverified internal PTI facts.",
+      
+      foot_disclaimer: "<strong>Disclaimer:</strong> External intelligence is compiled from verified public sources as of the latest snapshot (Sep 3, 2026) and requires contextual verification before use in formal decision-making.",
+      foot_copy: "PTI ERM External Intelligence Platform v1.1"
+    }
+  };
+
+  let currentLang = 'id';
+
+  function setLanguage(lang) {
+    currentLang = lang;
+    document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+    document.getElementById('lang-' + lang).classList.add('active');
+
+    const dict = i18n[lang];
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      if (dict[key]) {
+        el.innerHTML = dict[key];
+      }
+    });
+  }
+
+  // SPA Navigation System
+  function switchView(viewId, filterArg) {
+    document.querySelectorAll('.nav-btn').forEach(btn => {
+      if (btn.getAttribute('data-view') === viewId) {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    });
+
+    document.querySelectorAll('.view-pane').forEach(pane => {
+      pane.classList.remove('active');
+    });
+
+    const targetPane = document.getElementById('view-' + viewId);
+    if (targetPane) {
+      targetPane.classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    if (viewId === 'signals' && filterArg) {
+      const filterBtn = document.querySelector(`.filter-btn[onclick*="${filterArg}"]`) || document.querySelectorAll('.filter-btn')[0];
+      filterSignals(filterArg, filterBtn);
+    }
+  }
+
+  // Bind nav tab clicks
+  document.querySelectorAll('.nav-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const view = this.getAttribute('data-view');
+      switchView(view);
+    });
+  });
+
+  // Cross-view Navigation to specific Deep Dive card
+  function navigateToSignal(signalId) {
+    switchView('deepdive');
+    setTimeout(() => {
+      const card = document.getElementById('card-' + signalId);
+      if (card) {
+        document.querySelectorAll('details.card').forEach(c => c.removeAttribute('open'));
+        card.setAttribute('open', 'true');
+        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }, 150);
+  }
+
+  // Signals Table Filtering
+  function filterSignals(category, btnEl) {
+    if (btnEl) {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btnEl.classList.add('active');
+    }
+
+    const rows = document.querySelectorAll('.signal-row');
+    rows.forEach(row => {
+      if (category === 'all') {
+        row.style.display = '';
+      } else if (category === 'high') {
+        row.style.display = row.classList.contains('status-high') ? '' : 'none';
+      } else if (category === 'monitor') {
+        row.style.display = row.classList.contains('status-monitor') ? '' : 'none';
+      } else if (category === 'background') {
+        row.style.display = row.classList.contains('status-background') ? '' : 'none';
+      }
+    });
+  }
+
+
+
+  // Touch Tooltip Toggle Support
+  document.querySelectorAll('.tip-wrap').forEach(function(el){
+    el.addEventListener('click', function(e){
+      var isOpen = el.classList.contains('show');
+      document.querySelectorAll('.tip-wrap.show').forEach(function(o){ o.classList.remove('show'); });
+      if(!isOpen){ el.classList.add('show'); }
+      e.stopPropagation();
+    });
+  });
+  document.addEventListener('click', function(){
+    document.querySelectorAll('.tip-wrap.show').forEach(function(o){ o.classList.remove('show'); });
+  });
+</script>
+</body>
+</html>
