@@ -280,7 +280,6 @@
           <div class="spot-head" data-i18n="spot_high_head"></div>
           <ul class="spot-list">
             <li data-i18n="spot_h1"></li>
-            <li data-i18n="spot_h2"></li>
           </ul>
         </div>
         <div class="spot-card monitor">
@@ -290,6 +289,7 @@
             <li data-i18n="spot_m2"></li>
             <li data-i18n="spot_m3"></li>
             <li data-i18n="spot_m4"></li>
+            <li data-i18n="spot_m5"></li>
           </ul>
         </div>
       </div>
@@ -303,12 +303,12 @@
         <div class="snapshot-note" data-i18n="kpi_note"></div>
       </div>
       <div class="kpi high" onclick="switchView('signals','high')">
-        <div class="num-row"><div class="num">2</div><span class="delta down">−1</span></div>
+        <div class="num-row"><div class="num">1</div><span class="delta down">−1</span></div>
         <div class="label"><span data-i18n="kpi_high"></span><span class="tip-wrap"><span class="info-icon">i</span><span class="tip-bubble" data-i18n="tip_kpi_high"></span></span></div>
         <div class="snapshot-note" data-i18n="kpi_note"></div>
       </div>
       <div class="kpi monitor" onclick="switchView('signals','monitor')">
-        <div class="num-row"><div class="num">4</div><span class="delta up">+1</span></div>
+        <div class="num-row"><div class="num">5</div><span class="delta up">+1</span></div>
         <div class="label"><span data-i18n="kpi_monitor"></span><span class="tip-wrap"><span class="info-icon">i</span><span class="tip-bubble" data-i18n="tip_kpi_monitor"></span></span></div>
         <div class="snapshot-note" data-i18n="kpi_note"></div>
       </div>
@@ -330,7 +330,7 @@
     <div class="mgmt-grid">
       <div class="mgmt-col attn">
         <h4 data-i18n="mgmt_high_title"></h4>
-        <ul><li data-i18n="mgmt_h1"></li><li data-i18n="mgmt_h2"></li></ul>
+        <ul><li data-i18n="mgmt_h1"></li></ul>
       </div>
       <div class="mgmt-col mon">
         <h4 data-i18n="mgmt_mon_title"></h4>
@@ -358,9 +358,7 @@
 
           <div class="hy-axis" data-i18n="imp_hi"></div>
           <div class="hcell i-hi e-lo"></div>
-          <div class="hcell i-hi e-md">
-            <span class="chip" onclick="navigateToSignal('s2')"><span class="n">2</span><span data-i18n="chip_s2"></span></span>
-          </div>
+          <div class="hcell i-hi e-md"></div>
           <div class="hcell i-hi e-hi">
             <span class="chip" onclick="navigateToSignal('s1')"><span class="n">1</span><span data-i18n="chip_s1"></span></span>
           </div>
@@ -368,6 +366,7 @@
           <div class="hy-axis" data-i18n="imp_md"></div>
           <div class="hcell i-md e-lo">
             <span class="chip" onclick="navigateToSignal('s6')"><span class="n">6</span><span data-i18n="chip_s6"></span></span>
+            <span class="chip" onclick="navigateToSignal('s2')"><span class="n">2</span><span data-i18n="chip_s2"></span></span>
           </div>
           <div class="hcell i-md e-md">
             <span class="chip" onclick="navigateToSignal('s4')"><span class="n">4</span><span data-i18n="chip_s4"></span></span>
@@ -404,7 +403,7 @@
           <div class="trend-row"><div class="name" data-i18n="tr_1"></div><div class="trend-tag up" data-i18n="tag_up"></div></div>
           <div class="trend-row"><div class="name" data-i18n="tr_2"></div><div class="trend-tag stable" data-i18n="tag_active"></div></div>
           <div class="trend-row"><div class="name" data-i18n="tr_3"></div><div class="trend-tag down" data-i18n="tag_down"></div></div>
-          <div class="trend-row"><div class="name" data-i18n="tr_4"></div><div class="trend-tag uncertain" data-i18n="tag_uncertain"></div></div>
+          <div class="trend-row"><div class="name" data-i18n="tr_4"></div><div class="trend-tag up" data-i18n="tag_up"></div></div>
           <div class="trend-row"><div class="name" data-i18n="tr_5"></div><div class="trend-tag down" data-i18n="tag_down"></div></div>
           <div class="trend-row"><div class="name" data-i18n="tr_6"></div><div class="trend-tag uncertain" data-i18n="tag_uncertain2"></div></div>
           <div class="trend-row"><div class="name" data-i18n="tr_7"></div><div class="trend-tag stable" data-i18n="tag_stable"></div></div>
@@ -442,13 +441,13 @@
               <td><span class="trend-arrow up">↑</span></td>
               <td><span class="badge-status high"><span class="dot"></span>High Attention</span></td>
             </tr>
-            <tr id="rank-s2" class="clickable-row signal-row status-high" onclick="navigateToSignal('s2')">
+            <tr id="rank-s2" class="clickable-row signal-row status-monitor" onclick="navigateToSignal('s2')">
               <td><strong data-i18n="s2_title"></strong></td><td>Operational / Logistical</td>
               <td data-i18n="s2_loc"></td>
-              <td><span class="badge-level lvl-high"><span class="bars"><i></i><i></i><i></i></span><span data-i18n="lvl_hi"></span></span></td>
-              <td><span class="badge-level lvl-high"><span class="bars"><i></i><i></i><i></i></span><span data-i18n="lvl_hi"></span></span></td>
+              <td><span class="badge-level lvl-medium"><span class="bars"><i></i><i></i><i></i></span><span data-i18n="lvl_md"></span></span></td>
+              <td><span class="badge-level lvl-low"><span class="bars"><i></i><i></i><i></i></span><span data-i18n="lvl_lo"></span></span></td>
               <td><span class="trend-arrow down">↓</span></td>
-              <td><span class="badge-status high"><span class="dot"></span>High Attention</span></td>
+              <td><span class="badge-status monitor"><span class="dot"></span>Monitor</span></td>
             </tr>
             <tr id="rank-s3" class="clickable-row signal-row status-monitor" onclick="navigateToSignal('s3')">
               <td><strong data-i18n="s3_title"></strong></td><td>Financial / Strategic / Supply Chain</td>
@@ -514,7 +513,7 @@
           <thead><tr><th data-i18n="th_region"></th><th data-i18n="th_event"></th><th data-i18n="th_status"></th><th data-i18n="th_note"></th></tr></thead>
           <tbody>
             <tr><td><strong data-i18n="geo_r1"></strong></td><td data-i18n="geo_e1"></td><td><span class="badge-status high"><span class="dot"></span>High Attention</span></td><td data-i18n="geo_n1"></td></tr>
-            <tr><td><strong data-i18n="geo_r2"></strong></td><td data-i18n="geo_e2"></td><td><span class="badge-status high"><span class="dot"></span>High Attention</span></td><td data-i18n="geo_n2"></td></tr>
+            <tr><td><strong data-i18n="geo_r2"></strong></td><td data-i18n="geo_e2"></td><td><span class="badge-status monitor"><span class="dot"></span>Monitor</span></td><td data-i18n="geo_n2"></td></tr>
             <tr><td><strong data-i18n="geo_r3"></strong></td><td data-i18n="geo_e3"></td><td><span class="badge-status monitor"><span class="dot"></span>Monitor</span></td><td data-i18n="geo_n3"></td></tr>
             <tr><td><strong data-i18n="geo_r4"></strong></td><td data-i18n="geo_e4"></td><td><span class="badge-status monitor"><span class="dot"></span>Monitor</span></td><td data-i18n="geo_n4"></td></tr>
             <tr><td><strong data-i18n="geo_r5"></strong></td><td data-i18n="geo_e5"></td><td><span class="badge-status monitor"><span class="dot"></span>Monitor</span></td><td data-i18n="geo_n5"></td></tr>
@@ -543,14 +542,14 @@
         <div class="watch-field"><span class="fl" data-i18n="lbl_wtw"></span><span class="fv" data-i18n="w2_wtw"></span></div>
         <div class="watch-field"><span class="fl" data-i18n="lbl_dir"></span><span class="trend-tag down" style="font-size:11px;" data-i18n="tag_down"></span></div>
         <div class="watch-field"><span class="fl" data-i18n="lbl_trg"></span><span class="fv" data-i18n="w2_trg"></span></div>
-        <div class="watch-src"><a href="https://jurnalpolisi.id/antrean-kendaraan-di-pelabuhan-ketapang-capai-92-km-satlantas-polresta-banyuwangi-lakukan-rekayasa-lalu-lintas/" target="_blank">Jurnal Polisi</a><span class="src-date">6 Sep 2026</span></div>
+        <div class="watch-src"><a href="https://www.mediapelabuhannusantara.com/2026/09/urai-antrean-di-pelabuhan-ketapang-ksop.html" target="_blank">Media Pelabuhan Nusantara</a><span class="src-date">7 Sep 2026</span></div>
       </div>
       <div class="watch-item">
         <h4 data-i18n="w3_title"></h4>
         <div class="watch-field"><span class="fl" data-i18n="lbl_wtw"></span><span class="fv" data-i18n="w3_wtw"></span></div>
-        <div class="watch-field"><span class="fl" data-i18n="lbl_dir"></span><span class="trend-tag uncertain" style="font-size:11px;" data-i18n="tag_uncertain"></span></div>
+        <div class="watch-field"><span class="fl" data-i18n="lbl_dir"></span><span class="trend-tag up" style="font-size:11px;" data-i18n="tag_up"></span></div>
         <div class="watch-field"><span class="fl" data-i18n="lbl_trg"></span><span class="fv" data-i18n="w3_trg"></span></div>
-        <div class="watch-src"><a href="https://indikatorbisnis.com/detail/857121/konflik-as-iran-memanas-harga-minyak-melemah-pada-3-september-2026" target="_blank">Indikator Bisnis</a><span class="src-date">3 Sep 2026</span></div>
+        <div class="watch-src"><a href="https://www.cnnindonesia.com/ekonomi/20260907104052-85-1400907/harga-minyak-naik-ke-us-96-imbas-as-iran-serang-kapal-di-selat-hormuz" target="_blank">CNN Indonesia</a><span class="src-date">7 Sep 2026</span></div>
       </div>
       <div class="watch-item">
         <h4 data-i18n="w4_title"></h4>
@@ -602,22 +601,23 @@
         <div class="kv"><dt data-i18n="lbl_src_pri"></dt>
           <dd><a href="https://blog.itera.ac.id/gunung-krakatau-hari-ini-6-september-2026-status-erupsi-dan-dampak-abu-vulkanik/" target="_blank" data-i18n="s1_src1"></a> (6 Sep 2026)</dd>
           <dt data-i18n="lbl_src_sup"></dt>
-          <dd><a href="https://periskop.id/nasional/20260906/penyeberangan-merak-bakauheni-tetap-beroperasi-di-tengah-erupsi-gunung-anak-krakatau" target="_blank">Periskop.id</a>, <a href="https://www.cnbcindonesia.com/tech/20260906203613-37-765576/anak-krakatau-erupsi-lagi-malam-ini-status-level-iii" target="_blank">CNBC Indonesia</a> (6 Sep 2026)</dd>
+          <dd><a href="https://katadata.co.id/lifestyle/varia/6a9e5b8d1ef7a/update-erupsi-anak-krakatau-hari-ini-7-september-2026-status-masih-siaga" target="_blank">Katadata</a> (7 Sep 2026), <a href="https://id.usembassy.gov/natural-disaster-alert-mt-anak-krakatau-eruption-september-6-2026/" target="_blank">U.S. Embassy Jakarta</a> (bandara ditutup sementara)</dd>
         </div>
       </div>
     </details>
 
     <details class="card" id="card-s2">
       <summary><div><div class="stitle" data-i18n="s2_dd_title"></div>
-        <div class="smeta"><span class="badge-status high"><span class="dot"></span>High Attention</span><span data-i18n="s2_dd_meta"></span></div></div>
+        <div class="smeta"><span class="badge-status monitor"><span class="dot"></span>Monitor</span><span data-i18n="s2_dd_meta"></span></div></div>
         <div class="chev">+</div></summary>
       <div class="card-body">
         <div class="badge-row">
           <span class="badge-status background"><span class="dot"></span>Operational</span>
           <span class="badge-status background"><span class="dot"></span>Logistics</span>
-          <span class="badge-level lvl-high"><span class="bars"><i></i><i></i><i></i></span><span data-i18n="lbl_imp_hi"></span></span>
-          <span class="badge-level lvl-high"><span class="bars"><i></i><i></i><i></i></span><span data-i18n="lbl_esc_hi_note"></span></span>
+          <span class="badge-level lvl-medium"><span class="bars"><i></i><i></i><i></i></span><span data-i18n="lbl_imp_md"></span></span>
+          <span class="badge-level lvl-low"><span class="bars"><i></i><i></i><i></i></span><span data-i18n="lbl_esc_lo"></span></span>
         </div>
+        <div class="correction-note" data-i18n="s2_update"></div>
         <div class="subhead" data-i18n="sub_sit"></div>
         <div class="fact"><span class="tiny-label" data-i18n="lbl_fact"></span><p class="body-text" data-i18n="s2_fact"></p></div>
         <div class="subhead" data-i18n="sub_inf"></div>
@@ -633,9 +633,9 @@
         <div class="subhead" data-i18n="lbl_wtw"></div>
         <ul class="clean-bullets"><li data-i18n="s2_w1"></li><li data-i18n="s2_w2"></li></ul>
         <div class="kv"><dt data-i18n="lbl_src_pri"></dt>
-          <dd><a href="https://jurnalpolisi.id/antrean-kendaraan-di-pelabuhan-ketapang-capai-92-km-satlantas-polresta-banyuwangi-lakukan-rekayasa-lalu-lintas/" target="_blank" data-i18n="s2_src1"></a> (6 Sep 2026)</dd>
+          <dd><a href="https://www.mediapelabuhannusantara.com/2026/09/urai-antrean-di-pelabuhan-ketapang-ksop.html" target="_blank" data-i18n="s2_src1"></a> (7 Sep 2026)</dd>
           <dt data-i18n="lbl_src_sup"></dt>
-          <dd><a href="https://www.detik.com/jatim/berita/d-8649398/biang-kerok-macet-horor-di-pelabuhan-ketapang/amp" target="_blank">Detik Jatim</a> (4 Sep 2026)</dd>
+          <dd><a href="https://www.jawapos.com/berita-daerah/2609060396/panjang-antrean-di-pelabuhan-ketapang-kian-pendek-penyeberangan-antarpulau-mulai-lancar" target="_blank">Jawa Pos</a>, <a href="https://www.ngopibareng.id/read/asdp-datangkan-kmp-jatra-i-dan-kmp-port-link-0-banyu-urai-macet-di-jalur-pelabuhan-ketapang" target="_blank">Ngopibareng</a> (6–7 Sep 2026)</dd>
         </div>
       </div>
     </details>
@@ -667,9 +667,9 @@
         <div class="subhead" data-i18n="lbl_wtw"></div>
         <ul class="clean-bullets"><li data-i18n="s3_w1"></li><li data-i18n="s3_w2"></li></ul>
         <div class="kv"><dt data-i18n="lbl_src_pri"></dt>
-          <dd><a href="https://indikatorbisnis.com/detail/857121/konflik-as-iran-memanas-harga-minyak-melemah-pada-3-september-2026" target="_blank" data-i18n="s3_src1"></a> (3 Sep 2026)</dd>
+          <dd><a href="https://www.cnnindonesia.com/ekonomi/20260907104052-85-1400907/harga-minyak-naik-ke-us-96-imbas-as-iran-serang-kapal-di-selat-hormuz" target="_blank" data-i18n="s3_src1"></a> (7 Sep 2026)</dd>
           <dt data-i18n="lbl_src_sup"></dt>
-          <dd><a href="https://en.wikipedia.org/wiki/2026_Israeli%E2%80%93United_States_strikes_on_Iran" target="_blank">Wikipedia</a>, <a href="https://www.rikopedia.com/2026/09/selat-hormuz-mencekam-brent-tembus-96.html" target="_blank">Rikopedia Research</a></dd>
+          <dd><a href="https://mediaindonesia.com/internasional/930572/as-iran-saling-serang-harga-minyak-dunia-melonjak-lagi" target="_blank">Media Indonesia</a>, <a href="https://insiderindonesia.com/detail/1450102/harga-minyak-dunia-tembus-96-dolar-as-per-barel-bbm-terancam-naik" target="_blank">Insider Indonesia</a> (7 Sep 2026)</dd>
         </div>
       </div>
     </details>
@@ -803,18 +803,22 @@
         <li><a href="https://blog.itera.ac.id/gunung-krakatau-hari-ini-6-september-2026-status-erupsi-dan-dampak-abu-vulkanik/" target="_blank">ITERA / MAGMA Indonesia</a> — <span data-i18n="src_l1"></span> (6 Sep 2026)</li>
         <li><a href="https://mediaindonesia.com/humaniora/930348/aktivitas-gunung-anak-krakatau-menurun-status-tetap-siaga-level-iii" target="_blank">Media Indonesia</a> — <span data-i18n="src_l2"></span> (6 Sep 2026)</li>
         <li><a href="https://periskop.id/nasional/20260906/penyeberangan-merak-bakauheni-tetap-beroperasi-di-tengah-erupsi-gunung-anak-krakatau" target="_blank">Periskop.id</a> — <span data-i18n="src_l3"></span> (6 Sep 2026)</li>
+        <li><a href="https://katadata.co.id/lifestyle/varia/6a9e5b8d1ef7a/update-erupsi-anak-krakatau-hari-ini-7-september-2026-status-masih-siaga" target="_blank">Katadata</a> — <span data-i18n="src_l18"></span> (7 Sep 2026)</li>
+        <li><a href="https://id.usembassy.gov/natural-disaster-alert-mt-anak-krakatau-eruption-september-6-2026/" target="_blank">U.S. Embassy Jakarta</a> — <span data-i18n="src_l19"></span> (6 Sep 2026)</li>
       </ul>
 
       <div class="src-cat" data-i18n="sc_2"></div>
       <ul class="src-list">
-        <li><a href="https://jurnalpolisi.id/antrean-kendaraan-di-pelabuhan-ketapang-capai-92-km-satlantas-polresta-banyuwangi-lakukan-rekayasa-lalu-lintas/" target="_blank">Jurnal Polisi</a> — <span data-i18n="src_l4"></span> (6 Sep 2026)</li>
+        <li><a href="https://www.mediapelabuhannusantara.com/2026/09/urai-antrean-di-pelabuhan-ketapang-ksop.html" target="_blank">Media Pelabuhan Nusantara</a> — <span data-i18n="src_l4"></span> (7 Sep 2026)</li>
+        <li><a href="https://www.jawapos.com/berita-daerah/2609060396/panjang-antrean-di-pelabuhan-ketapang-kian-pendek-penyeberangan-antarpulau-mulai-lancar" target="_blank">Jawa Pos</a> — <span data-i18n="src_l20"></span> (7 Sep 2026)</li>
+        <li><a href="https://www.ngopibareng.id/read/asdp-datangkan-kmp-jatra-i-dan-kmp-port-link-0-banyu-urai-macet-di-jalur-pelabuhan-ketapang" target="_blank">Ngopibareng</a> — <span data-i18n="src_l21"></span> (6 Sep 2026)</li>
         <li><a href="https://www.detik.com/jatim/berita/d-8649398/biang-kerok-macet-horor-di-pelabuhan-ketapang/amp" target="_blank">Detik Jatim</a> — <span data-i18n="src_l5"></span> (4 Sep 2026)</li>
-        <li><a href="https://jatim.antaranews.com/berita/1095812/kemacetan-menuju-pelabuhan-ketapang-mencapai-12-kilometer" target="_blank">ANTARA Jatim</a> — <span data-i18n="src_l6"></span> (3 Sep 2026)</li>
       </ul>
 
       <div class="src-cat" data-i18n="sc_3"></div>
       <ul class="src-list">
-        <li><a href="https://indikatorbisnis.com/detail/857121/konflik-as-iran-memanas-harga-minyak-melemah-pada-3-september-2026" target="_blank">Indikator Bisnis</a> — <span data-i18n="src_l7"></span> (3 Sep 2026)</li>
+        <li><a href="https://www.cnnindonesia.com/ekonomi/20260907104052-85-1400907/harga-minyak-naik-ke-us-96-imbas-as-iran-serang-kapal-di-selat-hormuz" target="_blank">CNN Indonesia</a> — <span data-i18n="src_l7"></span> (7 Sep 2026)</li>
+        <li><a href="https://mediaindonesia.com/internasional/930572/as-iran-saling-serang-harga-minyak-dunia-melonjak-lagi" target="_blank">Media Indonesia</a> — <span data-i18n="src_l22"></span> (7 Sep 2026)</li>
         <li><a href="https://www.rikopedia.com/2026/09/selat-hormuz-mencekam-brent-tembus-96.html" target="_blank">Rikopedia Research</a> — <span data-i18n="src_l8"></span> (4 Sep 2026)</li>
         <li><a href="https://en.wikipedia.org/wiki/2026_Israeli%E2%80%93United_States_strikes_on_Iran" target="_blank">Wikipedia</a> — <span data-i18n="src_l9"></span></li>
         <li><a href="https://www.cnbcindonesia.com/research/20260831100938-128-763566/ini-hitung-hitungan-harga-bbm-per-1-september-2026-naik-atau-turun" target="_blank">CNBC Indonesia</a> — <span data-i18n="src_l10"></span> (31 Aug 2026)</li>
@@ -851,26 +855,26 @@
       brand_sub: "External Risk Platform",
       nav_overview: "Overview", nav_landscape: "Landscape", nav_signals: "Signals", nav_geography: "Geography",
       nav_watchlist: "Watchlist", nav_deepdive: "Deep Dive", nav_sources: "Sources",
-      badge_updated: "Diperbarui 7 Sep 2026",
+      badge_updated: "Diperbarui 8 Sep 2026",
 
       mast_brand: "PT Pelabuhan Tegar Indonesia (PTI) — Enterprise Risk Management",
       mast_title: "Daily Maritime &amp; Port Risk Intelligence",
       mast_sub: "External Business Environment Sensing Layer",
-      lbl_updated: "Diperbarui:", val_date: "Senin, 7 September 2026, pagi WIB",
-      lbl_prev: "Pembaruan sebelumnya:", val_prev: "Sabtu, 5 September 2026",
+      lbl_updated: "Diperbarui:", val_date: "Selasa, 8 September 2026, pagi WIB",
+      lbl_prev: "Pembaruan sebelumnya:", val_prev: "Senin, 7 September 2026",
       lbl_window: "Window:", val_window: "24–72 jam terakhir (tren hingga 3 minggu)",
       lbl_scope: "Scope:", val_scope: "Indonesia (Selat Sunda, Jawa Timur, NTT, Selat Hormuz→domestik, Selat Malaka)",
 
       spotlight_title: "Today's Intelligence Spotlight",
-      spotlight_date: "Snapshot: 7 September 2026 (baseline sebelumnya: 5 September 2026)",
-      spot_high_head: "2 ISU HIGH ATTENTION AKTIF",
-      spot_mon_head: "4 SINYAL MONITOR AKTIF",
-      spot_h1: "<strong>Erupsi Gunung Anak Krakatau Level III (Siaga)</strong> di Selat Sunda — erupsi menerus &amp; susulan berlanjut hingga malam 6 September; radius bahaya 3 km; penyeberangan Merak–Bakauheni masih normal namun terus dipantau.",
-      spot_h2: "<strong>Kemacetan Pelabuhan Ketapang (Banyuwangi)</strong> — antrean membaik dari 15 km (3–4 Sep) menjadi 9,2 km (6 Sep) akibat berkurangnya kapasitas dermaga selama masa konstruksi hingga Maret 2027.",
-      spot_m1: "<strong>Eskalasi Perang AS–Iran &amp; Selat Hormuz</strong> — Brent sempat menembus US$96/barel (4 Sep) sebelum melemah ke ~US$95 (3 Sep) di tengah sinyal tentatif de-eskalasi; lalu lintas kapal di Hormuz turun tajam.",
-      spot_m2: "<strong>Tenggelamnya MT Elisabet</strong> (Laut Jawa, perairan Kalteng, 21 Agustus) baru terungkap ke publik pekan ini — 5 ABK hilang/diduga tewas, 9 selamat; <em>koreksi</em>: bukan di Selat Bangka dan tidak ada tumpahan minyak terkonfirmasi.",
-      spot_m3: "<strong>Opsi Mogok Nasional Buruh TKBM</strong> meningkat ke tahap &quot;Siaga Mogok Nasional&quot; (konsolidasi lintas serikat sejak awal Agustus); belum ada tanggal aksi maupun respons resmi pemerintah.",
-      spot_m4: "<strong>Gempa Susulan NTT</strong> mencapai 12.968 kejadian (6 Sep); tren tetap meluruh, status tanggap darurat diperpanjang hingga 12 September.",
+      spotlight_date: "Snapshot: 8 September 2026 (baseline sebelumnya: 7 September 2026)",
+      spot_high_head: "1 ISU HIGH ATTENTION AKTIF",
+      spot_mon_head: "5 SINYAL MONITOR AKTIF",
+      spot_h1: "<strong>Erupsi Gunung Anak Krakatau Level III (Siaga)</strong> di Selat Sunda — erupsi menerus 25 jam berakhir 6 September dini hari, disusul erupsi strombolian berkala; abu sempat menutup sementara Bandara Soekarno-Hatta &amp; Halim (5–6 Sep); penyeberangan Merak–Bakauheni masih normal namun terus dipantau.",
+      spot_m1: "<strong>Eskalasi lanjutan Perang AS–Iran &amp; Selat Hormuz</strong> — serangan balasan terhadap kapal tanker (termasuk supertanker Arab Saudi, 2 pelaut tewas) mendorong Brent ke US$96,80–97,07/barel (7 Sep); lalu lintas kapal di Hormuz anjlok ke ±10 kapal/hari, terendah sejak Mei. Ini adalah eskalasi lanjutan, bukan de-eskalasi seperti sempat terindikasi 3 September.",
+      spot_m2: "<strong>Kemacetan Pelabuhan Ketapang</strong> membaik signifikan menjadi ±2,5 km (7 Sep sore) setelah penambahan KMP Jatra I &amp; Portlink 0 (tiba 8 Sep); diturunkan dari High Attention ke Monitor.",
+      spot_m3: "<strong>Tenggelamnya MT Elisabet</strong> (Laut Jawa, perairan Kalteng, 21 Agustus) baru terungkap ke publik pekan ini — 5 ABK hilang/diduga tewas, 9 selamat; <em>koreksi</em>: bukan di Selat Bangka dan tidak ada tumpahan minyak terkonfirmasi.",
+      spot_m4: "<strong>Opsi Mogok Nasional Buruh TKBM</strong> tetap pada tahap &quot;Siaga Mogok Nasional&quot;; belum ada tanggal aksi maupun respons resmi pemerintah.",
+      spot_m5: "<strong>Gempa Susulan NTT</strong> tetap meluruh (12.968 kejadian per 6 Sep, belum ada update lebih baru); status tanggap darurat berlaku hingga 12 September.",
 
       sec_kpi: "A. Ringkasan Landscape Risiko",
       kpi_total: "Meaningful Developments Today",
@@ -882,18 +886,17 @@
       tip_kpi_background: "Perkembangan kontekstual dengan signifikansi terbatas atau keterpaparan langsung yang rendah.",
       tip_kpi_cross: "Perkembangan yang diklasifikasikan di bawah beberapa domain risiko sekaligus.",
 
-      change_note: "<b>Change Since Previous Update (5→7 Sep):</b> High Attention turun dari 3 menjadi 2 setelah koreksi evidence pada sinyal MT Elisabet — pembaruan sebelumnya keliru mencatat lokasi (Selat Bangka) dan tumpahan minyak BBM yang tidak dapat dikonfirmasi oleh sumber primer; fakta terverifikasi menunjukkan kejadian di Laut Jawa (perairan Kalimantan Tengah), operasi SAR sudah ditutup sejak 28 Agustus, dan tidak ditemukan bukti tumpahan. Sinyal ini diturunkan menjadi Monitor. Ketapang tetap High Attention namun trennya membaik. Kebakaran kapal LCT Selat Tiworo dan peringatan gelombang tinggi diturunkan ke Background karena tidak ada perkembangan baru yang terverifikasi.",
+      change_note: "<b>Change Since Previous Update (7→8 Sep):</b> High Attention turun dari 2 menjadi 1 — kemacetan Pelabuhan Ketapang diturunkan ke Monitor setelah antrean membaik tajam (9,2 km → ±2,5 km) dan ASDP menambah dua kapal bantuan yang tiba 8 September. Sebaliknya, evidence baru menunjukkan eskalasi Perang AS–Iran justru berlanjut (bukan mereda seperti indikasi 3 September): serangan langsung terhadap kapal tanker komersial (termasuk supertanker Arab Saudi dengan korban jiwa) dan Brent naik ke &gt;US$96/barel; sinyal ini tetap Monitor namun catatan trennya diperbarui dari &quot;uncertain/tentative de-escalation&quot; menjadi &quot;increasing/escalating&quot;. Erupsi Anak Krakatau tetap High Attention; ditambahkan detail penutupan sementara Bandara Soekarno-Hatta &amp; Halim akibat abu vulkanik.",
 
       sec_mgmt: "B. Executive Management Awareness",
       mgmt_high_title: "Prioritas High Attention",
       mgmt_mon_title: "Active Watch List",
       mgmt_info_title: "Informasi &amp; Konteks",
-      mgmt_h1: "Erupsi Anak Krakatau Level III berlanjut — pantau potensi gangguan navigasi Selat Sunda meski penyeberangan Merak–Bakauheni masih normal.",
-      mgmt_h2: "Kemacetan Pelabuhan Ketapang membaik namun akar masalah (kapasitas dermaga) berlangsung hingga Maret 2027 — potensi berulang.",
-      mgmt_m1: "Harga BBM non-subsidi tetap dalam tren naik &amp; volatil akibat perang AS–Iran; pantau pengumuman harga Pertamina 1 Oktober.",
-      mgmt_m2: "MT Elisabet (tenggelam 21 Agustus, terungkap 4–5 Sep) — evidence dikoreksi; kini Monitor, bukan High Attention.",
-      mgmt_m3: "SP TKBM meningkatkan konsolidasi ke tahap Siaga Mogok Nasional; belum ada tanggal aksi atau respons pemerintah.",
-      mgmt_m4: "Gempa susulan NTT tetap meluruh (12.968 kejadian); tanggap darurat diperpanjang hingga 12 September.",
+      mgmt_h1: "Erupsi Anak Krakatau Level III berlanjut secara episodik — sempat menutup sementara Bandara Soekarno-Hatta &amp; Halim; pantau potensi gangguan navigasi Selat Sunda meski penyeberangan Merak–Bakauheni masih normal.",
+      mgmt_m1: "Kemacetan Pelabuhan Ketapang membaik tajam (±2,5 km) setelah penambahan kapal; diturunkan ke Monitor, namun akar masalah (kapasitas dermaga) berlangsung hingga Maret 2027 — potensi berulang.",
+      mgmt_m2: "Perang AS–Iran &amp; Selat Hormuz kembali eskalasi (bukan mereda) — serangan langsung ke kapal tanker komersial, Brent &gt;US$96/barel; pantau pengumuman harga BBM Pertamina 1 Oktober.",
+      mgmt_m3: "MT Elisabet (tenggelam 21 Agustus, terungkap 4–5 Sep) — evidence dikoreksi; tetap Monitor.",
+      mgmt_m4: "SP TKBM tetap pada tahap Siaga Mogok Nasional; belum ada tanggal aksi atau respons pemerintah. Gempa susulan NTT tetap meluruh (12.968 kejadian); tanggap darurat berlaku hingga 12 September.",
       mgmt_i1: "Kerja sama trilateral coast guard Indonesia–Malaysia–Singapura di Selat Malaka tetap relevan sebagai konteks struktural.",
       mgmt_i2: "Peringatan gelombang tinggi 2–5 September telah berakhir; kondisi pelayaran membaik. Kebakaran LCT Selat Tiworo tidak ada update baru.",
       mgmt_disclaimer: "Lapisan intelijen eksternal ini tidak menggantikan Risk Register internal, RCSA, atau proses eskalasi formal PTI. Penentuan tindak lanjut formal tetap memerlukan verifikasi kontekstual oleh fungsi ERM.",
@@ -919,7 +922,7 @@
       tr_8: "Kecelakaan kapal domestik (LCT Tiworo, gelombang tinggi)", tag_resolved: "↓ No New Update",
 
       sec_ranking: "Ranking Sinyal Risiko Utama Hari Ini",
-      flt_all: "Semua Sinyal (8)", flt_high: "High Attention (2)", flt_mon: "Monitor (4)", flt_bg: "Background (2)",
+      flt_all: "Semua Sinyal (8)", flt_high: "High Attention (1)", flt_mon: "Monitor (5)", flt_bg: "Background (2)",
       scroll_hint: "→ Geser tabel untuk melihat kolom lainnya",
       th_signal: "Sinyal", th_category: "Kategori", th_location: "Lokasi", th_impact: "Impact", th_escalation: "Escalation", th_trend: "Tren", th_status: "Status",
       s1_title: "1. Erupsi Gunung Anak Krakatau Level III (Siaga) — Selat Sunda", s1_loc: "Selat Sunda",
@@ -969,8 +972,8 @@
 
       s1_dd_title: "1. Erupsi Gunung Anak Krakatau Level III (Siaga) — Selat Sunda",
       s1_dd_meta: "Selat Sunda · Status sejak 2 Juli, aktif sejak 4 September 2026",
-      s1_fact: "Gunung Anak Krakatau berstatus Level III (Siaga) sejak 2 Juli 2026. Erupsi menerus berlangsung ~25 jam mulai 4 September malam, sempat berhenti 6 September dini hari, lalu erupsi susulan kembali terjadi malam 6 September (amplitudo 58 mm). Radius bahaya 3 km berlaku bagi kapal, nelayan, dan wisatawan. Abu vulkanik tersebar ke Banten, DKI Jakarta, Jawa Barat, Lampung, dan Bengkulu.",
-      s1_inf: "Ini adalah episode aktif dari status Siaga yang sudah berlangsung dua bulan, bukan eskalasi status baru. Badan Geologi mencatat penurunan seismik pada 6 September namun menegaskan dinamika internal gunung masih tinggi sehingga letusan susulan tetap mungkin terjadi. Dampak utama saat ini pada penerbangan (abu vulkanik), sedangkan jalur pelayaran Selat Sunda masih beroperasi normal dengan pembatasan radius.",
+      s1_fact: "Gunung Anak Krakatau berstatus Level III (Siaga) sejak 2 Juli 2026. Erupsi menerus berlangsung ~25 jam mulai 4 September malam hingga berakhir 6 September dini hari (00.04 WIB), disusul rangkaian erupsi strombolian berkala (tercatat 3 kali erupsi, 9 kali hembusan, 4 kali tremor menerus per 6–7 September). Abu vulkanik sempat menutup sementara Bandara Soekarno-Hatta &amp; Halim (hingga 09.30 WIB) serta Bandara Lampung (hingga 10.00 WIB) pada 5–6 September. Radius bahaya 3 km tetap berlaku bagi kapal, nelayan, dan wisatawan.",
+      s1_inf: "Ini adalah episode aktif dari status Siaga yang sudah berlangsung dua bulan, bukan eskalasi status baru. Badan Geologi menyatakan berakhirnya erupsi menerus bukan berarti aktivitas berhenti — dinamika kegempaan pada 6–7 September masih tinggi sehingga potensi letusan susulan tetap tinggi. Dampak paling nyata sejauh ini adalah pada penerbangan (penutupan bandara sementara), sedangkan jalur pelayaran Selat Sunda masih beroperasi normal dengan pembatasan radius 3 km.",
       s1_fl1: "Erupsi menerus &amp; susulan Anak Krakatau (Level III)",
       s1_fl2: "Sebaran abu vulkanik &amp; pembatasan radius 3 km bagi kapal",
       s1_fl3: "Potensi gangguan jarak pandang/navigasi di Selat Sunda jika abu meluas atau erupsi meningkat",
@@ -979,29 +982,30 @@
       s1_w2: "Laporan resmi ASDP/Kemenhub bila penyeberangan Merak–Bakauheni dihentikan karena jarak pandang atau kesehatan penumpang.",
       s1_src1: "Status Erupsi dan Dampak Abu Vulkanik Anak Krakatau",
 
-      s2_dd_title: "2. Kemacetan Pelabuhan Ketapang (Banyuwangi) — membaik",
-      s2_dd_meta: "Ketapang, Banyuwangi (Jawa Timur) · Sejak 2 September, berlanjut hingga 6 September",
-      s2_fact: "Antrean kendaraan menuju Pelabuhan Ketapang mencapai puncaknya 15 km / 14 jam pada 3–4 September, membaik menjadi 9,2 km pada 6 September malam. Akar masalah adalah berkurangnya kapasitas dermaga: Dermaga MB II ditutup untuk peningkatan kapasitas hingga perkiraan Maret 2027, dan Dermaga Bulusan tidak dapat dioperasikan karena fender rusak. ASDP menambah kapal berkapasitas besar dan menerapkan skema rotasi TBB untuk mempercepat penguraian.",
-      s2_inf: "Ini bukan sekadar dampak cuaca buruk seperti yang sempat dilaporkan sebelumnya, melainkan keterbatasan kapasitas dermaga struktural yang akan berlangsung hingga awal 2027. Perbaikan saat ini bersifat mitigatif (kapal tambahan, rekayasa lalu lintas), bukan solusi permanen — sehingga potensi kemacetan berulang tetap ada selama periode konstruksi.",
+      s2_dd_title: "2. Kemacetan Pelabuhan Ketapang (Banyuwangi) — membaik, diturunkan ke Monitor",
+      s2_dd_meta: "Ketapang, Banyuwangi (Jawa Timur) · Sejak 2 September, membaik hingga 7-8 September",
+      s2_update: "<b>Update:</b> Status diturunkan dari High Attention menjadi Monitor pada pembaruan 8 September setelah antrean membaik tajam menjadi ±2,5 km dan dua kapal bantuan tiba di Banyuwangi.",
+      s2_fact: "Antrean kendaraan menuju Pelabuhan Ketapang mencapai puncaknya 15 km / 14 jam pada 3–4 September, membaik bertahap menjadi 9,2 km (6 Sep malam), 6 km (6 Sep siang), lalu 2,5 km pada 7 September pukul 16.00 WIB. Akar masalah adalah berkurangnya kapasitas dermaga (Dermaga MB II ditutup untuk peningkatan kapasitas hingga perkiraan Maret 2027; Dermaga Bulusan rusak fender) ditambah kenaikan volume kendaraan logistik ~16%. ASDP mendatangkan kapal tambahan KMP Jatra I dan KMP Portlink 0 yang tiba 8 September, serta KSOP Tanjung Wangi menjadwalkan survei batimetri Dermaga Bulusan pada 8 September untuk evaluasi keselamatan penggunaannya kembali.",
+      s2_inf: "Perbaikan antrean berlangsung cepat dan konsisten dalam 4 hari terakhir, menunjukkan langkah mitigasi (kapal tambahan, rekayasa lalu lintas, penambahan personel) efektif meredakan dampak jangka pendek. Namun akar masalah struktural (kapasitas dermaga) baru akan tuntas sekitar Maret 2027, sehingga potensi kemacetan berulang — terutama saat lonjakan volume logistik atau libur panjang — tetap ada selama periode tersebut.",
       s2_fl1: "Penutupan/kerusakan dermaga operasional Ketapang &amp; Gilimanuk",
       s2_fl2: "Penurunan kapasitas bongkar-muat penyeberangan Jawa–Bali",
       s2_fl3: "Antrean logistik &amp; penundaan distribusi barang lintas Jawa–Bali",
       s2_rel: "<b>Context:</b> Relevan sebagai preseden risiko kapasitas infrastruktur pelabuhan penyeberangan yang bergantung pada jumlah dermaga aktif. Tidak ada keterkaitan operasional langsung dengan fasilitas PTI, namun relevan bagi kajian ketahanan kapasitas dermaga secara umum.",
       s2_w1: "Progres perbaikan Dermaga Bulusan &amp; penyelesaian Dermaga MB II (target Maret 2027).",
       s2_w2: "Panjang antrean harian yang dilaporkan Satlantas Polresta Banyuwangi.",
-      s2_src1: "Antrean Kendaraan di Pelabuhan Ketapang Capai 9,2 Km",
+      s2_src1: "Urai Antrean Ketapang, KSOP Tanjung Wangi Optimalkan Kapal &amp; Dermaga",
 
       s3_dd_title: "3. Perang AS–Iran &amp; Selat Hormuz mendorong kenaikan harga BBM non-subsidi",
       s3_dd_meta: "Selat Hormuz / global → domestik · Konflik sejak akhir Februari, eskalasi awal September 2026",
-      s3_fact: "Perang AS–Iran (dengan keterlibatan Israel) berlangsung sejak akhir Februari 2026, membuat Selat Hormuz praktis tertutup bagi lalu lintas normal. Lalu lintas kapal komoditas di Hormuz turun tajam dari rata-rata ~13 kapal/hari menjadi 4–6 kapal pada awal September. Brent sempat menembus US$96/barel (4 September) sebelum melemah ke ~US$95 (3 September) di tengah sinyal tentatif de-eskalasi dari Presiden AS. Efektif 1 September, Pertamina menaikkan harga BBM non-subsidi (Pertamina Dex, Dexlite), sementara BBM subsidi dipertahankan.",
-      s3_inf: "Ini adalah konflik geopolitik besar &amp; berkepanjangan (bukan insiden tunggal) yang telah mengganggu jalur energi strategis selama lebih dari 6 bulan. Volatilitas harga tetap tinggi meski ada sinyal de-eskalasi jangka pendek. Jalur transmisi utama ke pelabuhan adalah kenaikan biaya solar industri/BBM non-subsidi untuk alat berat bongkar muat dan genset pendukung operasional.",
+      s3_fact: "Perang AS–Iran (dengan keterlibatan Israel) berlangsung sejak akhir Februari 2026. Sempat muncul sinyal tentatif de-eskalasi pada 3 September (Brent melemah ke ~US$95), namun eskalasi berlanjut: pada 5–6 September AS menyerang tiga kapal tanker minyak Iran di lepas Pulau Kharg, sementara IRGC menargetkan tiga kapal tanker di rute tidak resmi Hormuz dan tiga kapal AS di wilayah lain — termasuk serangan terhadap supertanker Arab Saudi yang menewaskan dua pelaut (dikecam keras oleh Arab Saudi). Akibatnya, Brent naik ke US$96,80–97,07/barel dan WTI ke US$92,14–92,28/barel pada 7 September; lalu lintas kapal komoditas di Hormuz anjlok ke sekitar 10 kapal/hari — terendah sejak Mei 2026. Iran mengisyaratkan akan mengumumkan &quot;zona terbatas&quot; baru di luar Hormuz dalam beberapa hari ke depan.",
+      s3_inf: "Ini adalah konflik geopolitik besar &amp; berkepanjangan (bukan insiden tunggal) yang telah mengganggu jalur energi strategis selama lebih dari 6 bulan, dan pola terbaru (7 September) menunjukkan eskalasi lanjutan, bukan de-eskalasi seperti sempat terindikasi sebelumnya. Analis pasar (ANZ) memperkirakan ekspor minyak Timur Tengah akan tetap terbatas sepanjang sisa 2026. Jalur transmisi utama ke pelabuhan tetap sama: kenaikan biaya solar industri/BBM non-subsidi untuk alat berat bongkar muat dan genset pendukung operasional.",
       s3_fl1: "Perang AS–Iran &amp; penutupan de facto Selat Hormuz",
       s3_fl2: "Volatilitas tinggi harga minyak mentah &amp; ICP",
       s3_fl3: "Penyesuaian harga BBM non-subsidi domestik &amp; tekanan OPEX alat berat/genset pelabuhan",
       s3_rel: "<b>Context:</b> Relevan bagi operator pelabuhan yang mengonsumsi solar non-subsidi untuk operasional alat bongkar muat/genset. Besaran implikasi biaya memerlukan data konsumsi BBM internal PTI yang belum tersedia dalam intelijen eksternal ini.",
       s3_w1: "Sinyal gencatan senjata atau eskalasi baru AS–Iran.",
       s3_w2: "Pengumuman penyesuaian harga BBM Pertamina berikutnya per 1 Oktober 2026.",
-      s3_src1: "Konflik AS-Iran Memanas, Harga Minyak Melemah pada 3 September 2026",
+      s3_src1: "Harga Minyak Naik ke US$96 Imbas AS-Iran Serang Kapal di Selat Hormuz",
 
       s4_dd_title: "4. Tenggelamnya MT Elisabet — Laut Jawa (koreksi lokasi &amp; fakta)",
       s4_dd_meta: "Laut Jawa, perairan Kalimantan Tengah · Kejadian 21 Agustus, terungkap ke publik 4–5 September 2026",
@@ -1049,14 +1053,17 @@
       sc_3: "3. Energi, Ekonomi &amp; Geopolitik",
       sc_4: "4. Insiden Maritim, Kegempaan &amp; Ketenagakerjaan",
       src_l1: "Status erupsi &amp; dampak abu vulkanik", src_l2: "Aktivitas menurun, status tetap Siaga Level III",
-      src_l3: "Penyeberangan Merak-Bakauheni tetap beroperasi", src_l4: "Antrean capai 9,2 km, rekayasa lalu lintas",
+      src_l3: "Penyeberangan Merak-Bakauheni tetap beroperasi", src_l4: "KSOP optimalkan kapal &amp; dermaga, urai antrean",
       src_l5: "Analisis akar penyebab kemacetan Ketapang", src_l6: "Kemacetan menuju Ketapang mencapai 12 km",
-      src_l7: "Harga minyak melemah di tengah sinyal de-eskalasi", src_l8: "Analisis lalu lintas kapal Selat Hormuz anjlok",
+      src_l7: "Brent naik ke US$96 usai serangan kapal tanker di Hormuz", src_l8: "Analisis lalu lintas kapal Selat Hormuz anjlok",
       src_l9: "2026 Israeli–United States strikes on Iran (kronologi)", src_l10: "Perhitungan harga BBM per 1 September 2026",
       src_l11: "Kronologi tenggelamnya MT Elisabet di Laut Jawa", src_l12: "Update gempa susulan Flores",
       src_l13: "Update resmi penanganan gempa Flores", src_l14: "Konsolidasi SP TKBM menuju Siaga Mogok Nasional",
       src_l15: "Buruh pelabuhan buka opsi mogok nasional (rilis awal)", src_l16: "Kebakaran kapal LCT di Sultra",
       src_l17: "Kerja sama trilateral coast guard Selat Malaka",
+      src_l18: "Update erupsi 7 September, status masih Siaga", src_l19: "Penutupan sementara bandara akibat abu vulkanik",
+      src_l20: "Antrean kian pendek, penyeberangan mulai lancar", src_l21: "ASDP datangkan kapal bantuan tambahan",
+      src_l22: "AS-Iran saling serang, harga minyak melonjak lagi",
 
       meth_title: "Metodologi &amp; Batasan Intelijen PTI ERM",
       meth_body: "Disusun sebagai lapisan intelijen eksternal PTI ERM. Fakta dan interpretasi dipisahkan secara eksplisit sesuai kerangka FACT / INFERENCE / SCENARIO. Estimasi dampak dan eskalasi menggunakan professional judgment berbasis evidence yang tersedia per 7 September 2026, bukan skor kuantitatif presisi. Klasifikasi relevansi PTI (Contextually Relevant / Watch Only) menjelaskan konteks bisnis yang relevan berdasarkan evidence eksternal, bukan konfirmasi kondisi internal PTI yang tidak diverifikasi. Ketika evidence sebelumnya terbukti keliru (lihat catatan Change Control pada sinyal MT Elisabet), koreksi dilakukan secara transparan dengan menjelaskan informasi baru, asumsi sebelumnya, dan perubahan penilaian.",
@@ -1068,26 +1075,26 @@
       brand_sub: "External Risk Platform",
       nav_overview: "Overview", nav_landscape: "Landscape", nav_signals: "Signals", nav_geography: "Geography",
       nav_watchlist: "Watchlist", nav_deepdive: "Deep Dive", nav_sources: "Sources",
-      badge_updated: "Updated Sep 7, 2026",
+      badge_updated: "Updated Sep 8, 2026",
 
       mast_brand: "PT Pelabuhan Tegar Indonesia (PTI) — Enterprise Risk Management",
       mast_title: "Daily Maritime &amp; Port Risk Intelligence",
       mast_sub: "External Business Environment Sensing Layer",
-      lbl_updated: "Last updated:", val_date: "Monday, September 7, 2026, morning WIB",
-      lbl_prev: "Previous update:", val_prev: "Saturday, September 5, 2026",
+      lbl_updated: "Last updated:", val_date: "Tuesday, September 8, 2026, morning WIB",
+      lbl_prev: "Previous update:", val_prev: "Monday, September 7, 2026",
       lbl_window: "Window:", val_window: "Last 24–72 hours (trend context up to 3 weeks)",
       lbl_scope: "Scope:", val_scope: "Indonesia (Sunda Strait, East Java, NTT, Strait of Hormuz→domestic, Strait of Malacca)",
 
       spotlight_title: "Today's Intelligence Spotlight",
-      spotlight_date: "Snapshot: September 7, 2026 (previous baseline: September 5, 2026)",
-      spot_high_head: "2 ACTIVE HIGH ATTENTION ISSUES",
-      spot_mon_head: "4 ACTIVE MONITOR SIGNALS",
-      spot_h1: "<strong>Mount Anak Krakatau eruption, Level III (Alert)</strong> in the Sunda Strait — continuous and follow-on eruptions persisted through the night of Sep 6; 3 km danger radius; Merak–Bakauheni ferry crossing still normal but closely watched.",
-      spot_h2: "<strong>Ketapang Port congestion (Banyuwangi)</strong> — queue improved from 15 km (Sep 3–4) to 9.2 km (Sep 6) after berth capacity was reduced during construction expected to run until March 2027.",
-      spot_m1: "<strong>US–Iran war &amp; Strait of Hormuz escalation</strong> — Brent briefly topped US$96/barrel (Sep 4) before easing to ~US$95 (Sep 3) amid tentative de-escalation signals; vessel traffic through Hormuz has fallen sharply.",
-      spot_m2: "<strong>Sinking of MT Elisabet</strong> (Java Sea, Central Kalimantan waters, Aug 21) only became public this week — 5 crew missing/presumed dead, 9 survived; <em>correction</em>: not in the Bangka Strait, and no oil spill has been confirmed.",
-      spot_m3: "<strong>National TKBM strike option</strong> escalated to a &quot;national strike alert&quot; stage (cross-union consolidation since early August); no action date or government response yet.",
-      spot_m4: "<strong>NTT aftershocks</strong> reached 12,968 events (Sep 6); trend remains decaying; the emergency-response status was extended through September 12.",
+      spotlight_date: "Snapshot: September 8, 2026 (previous baseline: September 7, 2026)",
+      spot_high_head: "1 ACTIVE HIGH ATTENTION ISSUE",
+      spot_mon_head: "5 ACTIVE MONITOR SIGNALS",
+      spot_h1: "<strong>Mount Anak Krakatau eruption, Level III (Alert)</strong> in the Sunda Strait — the 25-hour continuous eruption ended early Sep 6, followed by periodic strombolian eruptions; ash briefly closed Soekarno-Hatta &amp; Halim airports (Sep 5–6); Merak–Bakauheni ferry crossing still normal but closely watched.",
+      spot_m1: "<strong>Renewed US–Iran war &amp; Strait of Hormuz escalation</strong> — retaliatory strikes on tankers (including a Saudi supertanker, 2 sailors killed) pushed Brent to US$96.80–97.07/barrel (Sep 7); Hormuz vessel traffic fell to roughly 10/day, the lowest since May. This is renewed escalation, not the de-escalation tentatively signalled on Sep 3.",
+      spot_m2: "<strong>Ketapang Port congestion</strong> improved sharply to roughly 2.5 km (evening Sep 7) after ASDP added the ferries KMP Jatra I and Portlink 0 (arriving Sep 8); downgraded from High Attention to Monitor.",
+      spot_m3: "<strong>Sinking of MT Elisabet</strong> (Java Sea, Central Kalimantan waters, Aug 21) only became public this week — 5 crew missing/presumed dead, 9 survived; <em>correction</em>: not in the Bangka Strait, and no oil spill has been confirmed.",
+      spot_m4: "<strong>National TKBM strike option</strong> remains at the &quot;national strike alert&quot; stage; no action date or government response yet.",
+      spot_m5: "<strong>NTT aftershocks</strong> remain on a decaying trend (12,968 events as of Sep 6, no newer count found); emergency-response status runs through September 12.",
 
       sec_kpi: "A. Risk Landscape Summary",
       kpi_total: "Meaningful Developments Today",
@@ -1099,18 +1106,17 @@
       tip_kpi_background: "Contextual developments with limited significance or low direct exposure.",
       tip_kpi_cross: "Developments classified under multiple risk domains at once.",
 
-      change_note: "<b>Change Since Previous Update (Sep 5→7):</b> High Attention dropped from 3 to 2 after correcting the evidence base on the MT Elisabet signal — the previous update mistakenly recorded the location (Bangka Strait) and an oil spill that primary sources cannot confirm. Verified facts show the incident occurred in the Java Sea (Central Kalimantan waters), the SAR operation had already closed on August 28, and no spill was found. This signal was downgraded to Monitor. Ketapang remains High Attention but its trend is improving. The Tiworo Strait LCT fire and the high-wave advisory were downgraded to Background as no new verified developments were found.",
+      change_note: "<b>Change Since Previous Update (Sep 7→8):</b> High Attention dropped from 2 to 1 — Ketapang Port congestion was downgraded to Monitor after the queue improved sharply (9.2 km → ~2.5 km) and ASDP added two relief ferries arriving September 8. Conversely, new evidence shows the US–Iran war has actually escalated further rather than easing as tentatively suggested on Sep 3: direct strikes on commercial tankers (including a Saudi supertanker with fatalities) and Brent rising above US$96/barrel; this signal remains Monitor but its trend note is updated from &quot;uncertain/tentative de-escalation&quot; to &quot;increasing/escalating&quot;. The Anak Krakatau eruption remains High Attention; detail on the temporary closure of Soekarno-Hatta &amp; Halim airports from volcanic ash has been added.",
 
       sec_mgmt: "B. Executive Management Awareness",
       mgmt_high_title: "High Attention Priorities",
       mgmt_mon_title: "Active Watch List",
       mgmt_info_title: "Information &amp; Context",
-      mgmt_h1: "Anak Krakatau's Level III eruption continues — monitor potential Sunda Strait navigation disruption even though the Merak–Bakauheni crossing remains normal.",
-      mgmt_h2: "Ketapang Port congestion is improving, but the root cause (berth capacity) will persist until March 2027 — recurrence is possible.",
-      mgmt_m1: "Non-subsidised fuel prices remain on a rising, volatile trend from the US–Iran war; watch for Pertamina's October 1 price announcement.",
-      mgmt_m2: "MT Elisabet (sank Aug 21, revealed Sep 4–5) — evidence corrected; now Monitor, not High Attention.",
-      mgmt_m3: "SP TKBM has escalated consolidation to a national strike alert stage; no action date or government response yet.",
-      mgmt_m4: "NTT aftershocks remain on a decaying trend (12,968 events); emergency status extended through Sep 12.",
+      mgmt_h1: "Anak Krakatau's Level III eruption continues episodically — briefly closed Soekarno-Hatta &amp; Halim airports; monitor potential Sunda Strait navigation disruption even though the Merak–Bakauheni crossing remains normal.",
+      mgmt_m1: "Ketapang Port congestion improved sharply (~2.5 km) after added ferries; downgraded to Monitor, though the root cause (berth capacity) will persist until March 2027 — recurrence is possible.",
+      mgmt_m2: "The US–Iran war and Strait of Hormuz have escalated again (not eased) — direct strikes on commercial tankers, Brent above US$96/barrel; watch for Pertamina's October 1 fuel price announcement.",
+      mgmt_m3: "MT Elisabet (sank Aug 21, revealed Sep 4–5) — evidence corrected; remains Monitor.",
+      mgmt_m4: "SP TKBM remains at the national strike alert stage; no action date or government response yet. NTT aftershocks remain decaying (12,968 events); emergency status runs through Sep 12.",
       mgmt_i1: "Trilateral Indonesia–Malaysia–Singapore coast guard cooperation in the Strait of Malacca remains relevant structural context.",
       mgmt_i2: "The Sep 2–5 high-wave advisory has ended; shipping conditions have improved. The Tiworo Strait LCT fire has no new update.",
       mgmt_disclaimer: "This external intelligence layer does not replace PTI's internal Risk Register, RCSA, or formal escalation process. Determining formal follow-up still requires contextual verification by the ERM function.",
@@ -1136,7 +1142,7 @@
       tr_8: "Domestic vessel accidents (LCT Tiworo, high waves)", tag_resolved: "↓ No New Update",
 
       sec_ranking: "Key Risk Signal Ranking Today",
-      flt_all: "All Signals (8)", flt_high: "High Attention (2)", flt_mon: "Monitor (4)", flt_bg: "Background (2)",
+      flt_all: "All Signals (8)", flt_high: "High Attention (1)", flt_mon: "Monitor (5)", flt_bg: "Background (2)",
       scroll_hint: "→ Scroll the table to see more columns",
       th_signal: "Signal", th_category: "Category", th_location: "Location", th_impact: "Impact", th_escalation: "Escalation", th_trend: "Trend", th_status: "Status",
       s1_title: "1. Mount Anak Krakatau eruption, Level III (Alert) — Sunda Strait", s1_loc: "Sunda Strait",
@@ -1186,8 +1192,8 @@
 
       s1_dd_title: "1. Mount Anak Krakatau eruption, Level III (Alert) — Sunda Strait",
       s1_dd_meta: "Sunda Strait · Alert status since July 2, active since September 4, 2026",
-      s1_fact: "Mount Anak Krakatau has been at Level III (Alert) since July 2, 2026. A continuous eruption lasted roughly 25 hours from the night of September 4, briefly paused early on September 6, then resumed with a follow-on eruption that night (58 mm amplitude). A 3 km danger radius applies to vessels, fishers, and tourists. Volcanic ash has spread to Banten, DKI Jakarta, West Java, Lampung, and Bengkulu.",
-      s1_inf: "This is an active episode within a two-month-old Alert status, not a new status escalation. Indonesia's Geological Agency recorded a seismic decline on September 6 but stressed the volcano's internal dynamics remain high, so further eruptions remain possible. The main impact so far has been on aviation (ash), while Sunda Strait shipping continues to operate normally under the radius restriction.",
+      s1_fact: "Mount Anak Krakatau has been at Level III (Alert) since July 2, 2026. A continuous eruption lasted roughly 25 hours from the night of September 4 until it ended early on September 6 (00:04 WIB), followed by periodic strombolian eruptions (3 eruption quakes, 9 emission quakes, 4 continuous tremors recorded September 6–7). Volcanic ash briefly closed Soekarno-Hatta and Halim airports (until 9:30 am) and Lampung Airport (until 10:00 am) on September 5–6. The 3 km danger radius remains in effect for vessels, fishers, and tourists.",
+      s1_inf: "This is an active episode within a two-month-old Alert status, not a new status escalation. Indonesia's Geological Agency stated that the end of the continuous eruption does not mean activity has stopped — seismic dynamics on September 6–7 remain high, so further eruptions remain likely. The most tangible impact so far has been on aviation (temporary airport closures), while Sunda Strait shipping continues to operate normally under the 3 km radius restriction.",
       s1_fl1: "Continuous and follow-on Anak Krakatau eruptions (Level III)",
       s1_fl2: "Volcanic ash spread &amp; 3 km vessel exclusion radius",
       s1_fl3: "Potential visibility/navigation disruption in the Sunda Strait if ash spreads further or eruptions intensify",
@@ -1196,29 +1202,30 @@
       s1_w2: "Official ASDP/Ministry reports if the Merak–Bakauheni crossing is halted over visibility or passenger health.",
       s1_src1: "Status of the Eruption and Volcanic Ash Impact",
 
-      s2_dd_title: "2. Ketapang Port congestion (Banyuwangi) — improving",
-      s2_dd_meta: "Ketapang, Banyuwangi (East Java) · Since September 2, ongoing through September 6",
-      s2_fact: "Vehicle queues toward Ketapang Port peaked at 15 km / 14 hours on September 3–4, improving to 9.2 km by the evening of September 6. The root cause is reduced berth capacity: Berth MB II is closed for a capacity upgrade expected to run until roughly March 2027, and Bulusan Berth is out of service due to damaged fenders. ASDP has added larger-capacity vessels and a rotational (TBB) scheme to speed up the backlog.",
-      s2_inf: "This is not primarily a weather-driven disruption as earlier reported, but a structural berth-capacity constraint expected to persist into early 2027. Current measures (extra vessels, traffic engineering) are mitigating, not permanent — so recurring congestion remains possible throughout the construction period.",
+      s2_dd_title: "2. Ketapang Port congestion (Banyuwangi) — improving, downgraded to Monitor",
+      s2_dd_meta: "Ketapang, Banyuwangi (East Java) · Since September 2, improving through September 7-8",
+      s2_update: "<b>Update:</b> Status downgraded from High Attention to Monitor in the September 8 update after the queue improved sharply to roughly 2.5 km and two relief ferries arrived in Banyuwangi.",
+      s2_fact: "Vehicle queues toward Ketapang Port peaked at 15 km / 14 hours on September 3–4, then improved in stages to 9.2 km (evening Sep 6), 6 km (midday Sep 6), and 2.5 km by 4pm on September 7. The root cause is reduced berth capacity (Berth MB II closed for a capacity upgrade until roughly March 2027; Bulusan Berth out of service from damaged fenders) compounded by a ~16% rise in logistics-vehicle volume. ASDP deployed additional ferries KMP Jatra I and KMP Portlink 0, arriving September 8, while the Tanjung Wangi Port Authority scheduled a bathymetric survey of Bulusan Berth on September 8 to assess its safety for reuse.",
+      s2_inf: "The queue has improved quickly and consistently over the past four days, showing that mitigation steps (extra vessels, traffic engineering, added personnel) are effectively easing the near-term impact. However, the structural root cause (berth capacity) will not be fully resolved until roughly March 2027, so recurring congestion — especially during logistics surges or long holidays — remains possible throughout that period.",
       s2_fl1: "Closure/damage of operational berths at Ketapang &amp; Gilimanuk",
       s2_fl2: "Reduced loading/unloading capacity for the Java–Bali crossing",
       s2_fl3: "Logistics queues &amp; delayed cross-strait goods distribution",
       s2_rel: "<b>Context:</b> Relevant as a precedent for ferry-port infrastructure-capacity risk tied to the number of active berths. No direct operational link to PTI facilities, but relevant to general berth-capacity resilience planning.",
       s2_w1: "Progress on Bulusan berth repairs and completion of Berth MB II (targeted for March 2027).",
       s2_w2: "Daily queue length reported by Banyuwangi Traffic Police.",
-      s2_src1: "Vehicle Queue at Ketapang Port Reaches 9.2 km",
+      s2_src1: "Easing Ketapang Queue, Tanjung Wangi Port Authority Optimises Ferries &amp; Berths",
 
       s3_dd_title: "3. US–Iran war &amp; Strait of Hormuz drive up non-subsidised fuel prices",
       s3_dd_meta: "Strait of Hormuz / global → domestic · Conflict since late February, escalation early September 2026",
-      s3_fact: "The US–Iran war (with Israeli involvement) has been ongoing since late February 2026, leaving the Strait of Hormuz effectively closed to normal traffic. Commodity vessel transits through Hormuz fell sharply from an average of ~13/day to 4–6 in early September. Brent briefly topped US$96/barrel (September 4) before easing to ~US$95 (September 3) amid tentative de-escalation signals from the US President. Effective September 1, Pertamina raised non-subsidised fuel prices (Pertamina Dex, Dexlite), while subsidised fuel was held unchanged.",
-      s3_inf: "This is a major, protracted geopolitical conflict — not a single incident — that has disrupted a strategic energy corridor for over six months. Price volatility remains high despite short-term de-escalation signals. The main transmission channel to ports is higher industrial diesel/non-subsidised fuel costs for cargo-handling equipment and support generators.",
+      s3_fact: "The US–Iran war (with Israeli involvement) has been ongoing since late February 2026. A tentative de-escalation signal appeared on September 3 (Brent easing to ~US$95), but escalation resumed: on September 5–6 the US struck three Iranian oil tankers off Kharg Island, while the IRGC targeted three tankers on unofficial Hormuz routes and three US vessels elsewhere — including a strike on a Saudi supertanker that killed two sailors, strongly condemned by Saudi Arabia. Brent consequently rose to US$96.80–97.07/barrel and WTI to US$92.14–92.28/barrel by September 7; commodity vessel transits through Hormuz plunged to roughly 10/day, the lowest since May 2026. Iran signalled it would announce a new &quot;restricted zone&quot; outside Hormuz within days.",
+      s3_inf: "This is a major, protracted geopolitical conflict — not a single incident — that has disrupted a strategic energy corridor for over six months, and the latest pattern (September 7) shows renewed escalation rather than the de-escalation tentatively signalled earlier. Market analysts (ANZ) expect Middle East oil exports to remain constrained for the rest of 2026. The main transmission channel to ports remains the same: higher industrial diesel/non-subsidised fuel costs for cargo-handling equipment and support generators.",
       s3_fl1: "US–Iran war &amp; de facto closure of the Strait of Hormuz",
       s3_fl2: "High volatility in crude oil &amp; ICP prices",
       s3_fl3: "Domestic non-subsidised fuel price adjustments &amp; OPEX pressure on port equipment/generators",
       s3_rel: "<b>Context:</b> Relevant to port operators consuming non-subsidised diesel for cargo-handling equipment/generators. The magnitude of cost impact requires PTI's internal fuel-consumption data, not available in this external intelligence.",
       s3_w1: "Signs of a ceasefire or renewed US–Iran escalation.",
       s3_w2: "Pertamina's next fuel price adjustment announcement on October 1, 2026.",
-      s3_src1: "US-Iran Conflict Intensifies, Oil Prices Weaken on September 3, 2026",
+      s3_src1: "Oil Rises to US$96 After US-Iran Vessel Strikes in the Strait of Hormuz",
 
       s4_dd_title: "4. Sinking of MT Elisabet — Java Sea (location &amp; facts corrected)",
       s4_dd_meta: "Java Sea, Central Kalimantan waters · Occurred August 21, revealed publicly September 4–5, 2026",
@@ -1266,14 +1273,17 @@
       sc_3: "3. Energy, Economy &amp; Geopolitics",
       sc_4: "4. Maritime Incidents, Seismology &amp; Labour",
       src_l1: "Eruption status &amp; volcanic ash impact", src_l2: "Activity declining, status remains Level III",
-      src_l3: "Merak-Bakauheni crossing remains operational", src_l4: "Queue reaches 9.2 km, traffic engineering deployed",
+      src_l3: "Merak-Bakauheni crossing remains operational", src_l4: "Port authority optimises ferries &amp; berths to clear queue",
       src_l5: "Root-cause analysis of Ketapang congestion", src_l6: "Queue toward Ketapang reaches 12 km",
-      src_l7: "Oil prices weaken amid de-escalation signals", src_l8: "Analysis: Hormuz vessel traffic plunges",
+      src_l7: "Brent rises to US$96 after tanker strikes in Hormuz", src_l8: "Analysis: Hormuz vessel traffic plunges",
       src_l9: "2026 Israeli–United States strikes on Iran (chronology)", src_l10: "Fuel price calculation for September 1, 2026",
       src_l11: "Chronology of the MT Elisabet sinking in the Java Sea", src_l12: "Flores aftershock update",
       src_l13: "Official Flores earthquake response update", src_l14: "SP TKBM consolidation toward national strike alert",
       src_l15: "Port workers open national strike option (initial release)", src_l16: "LCT vessel fire in Southeast Sulawesi",
       src_l17: "Trilateral coast guard cooperation in the Strait of Malacca",
+      src_l18: "September 7 eruption update, status still Alert", src_l19: "Temporary airport closures from volcanic ash",
+      src_l20: "Queue getting shorter, inter-island crossing easing", src_l21: "ASDP deploys additional relief ferries",
+      src_l22: "US-Iran strikes resume, oil prices surge again",
 
       meth_title: "PTI ERM External Intelligence Methodology &amp; Guardrails",
       meth_body: "Prepared as PTI ERM's external intelligence sensing layer. Facts and interpretation are explicitly separated under the FACT / INFERENCE / SCENARIO framework. Impact and escalation estimates use professional judgment based on evidence available as of September 7, 2026, not precise quantitative scoring. PTI relevance classifications (Contextually Relevant / Watch Only) describe relevant business context based on external evidence, not confirmation of unverified internal PTI conditions. Where earlier evidence proved incorrect (see the Change Control note on the MT Elisabet signal), corrections are made transparently, explaining the new information, the previous assumption, and the resulting change.",
