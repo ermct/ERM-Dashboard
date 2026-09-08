@@ -69,7 +69,7 @@
   .section-label{font-size:12px; letter-spacing:.04em; color:var(--signal-teal); margin-bottom:12px; display:flex; align-items:center; gap:8px; text-transform:uppercase; font-weight:600;}
   .section-label::before{content:''; width:14px; height:1px; background:var(--signal-teal); display:inline-block;}
 
-  .kpi-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:28px;}
+  .kpi-grid{display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin-bottom:28px;}
   .kpi{background:var(--panel); border:1px solid var(--panel-line); border-radius:6px; padding:16px 14px; position:relative; cursor:pointer; transition:transform .15s ease, border-color .15s ease;}
   .kpi:hover{transform:translateY(-2px); border-color:var(--signal-teal);}
   .kpi .num-row{display:flex; align-items:baseline; gap:8px;}
@@ -237,6 +237,8 @@
       <button class="nav-btn active" data-view="overview"><span data-i18n="nav_overview"></span></button>
       <button class="nav-btn" data-view="landscape"><span data-i18n="nav_landscape"></span></button>
       <button class="nav-btn" data-view="signals"><span data-i18n="nav_signals"></span><span class="badge-count">8</span></button>
+      <button class="nav-btn" data-view="geography"><span data-i18n="nav_geography"></span></button>
+      <button class="nav-btn" data-view="watchlist"><span data-i18n="nav_watchlist"></span><span class="badge-count">5</span></button>
       <button class="nav-btn" data-view="deepdive"><span data-i18n="nav_deepdive"></span></button>
       <button class="nav-btn" data-view="sources"><span data-i18n="nav_sources"></span></button>
     </nav>
@@ -313,6 +315,11 @@
       <div class="kpi background" onclick="switchView('signals','background')">
         <div class="num-row"><div class="num">2</div><span class="delta same">± 0</span></div>
         <div class="label"><span data-i18n="kpi_background"></span><span class="tip-wrap"><span class="info-icon">i</span><span class="tip-bubble" data-i18n="tip_kpi_background"></span></span></div>
+        <div class="snapshot-note" data-i18n="kpi_note"></div>
+      </div>
+      <div class="kpi info" onclick="switchView('landscape')">
+        <div class="num-row"><div class="num">4</div><span class="delta up">+1</span></div>
+        <div class="label"><span data-i18n="kpi_cross"></span><span class="tip-wrap right"><span class="info-icon">i</span><span class="tip-bubble" data-i18n="tip_kpi_cross"></span></span></div>
         <div class="snapshot-note" data-i18n="kpi_note"></div>
       </div>
     </div>
@@ -496,7 +503,72 @@
     </div>
   </main>
 
-  <!-- VIEW 4: DEEP DIVE -->
+  <!-- VIEW 4: GEOGRAPHY -->
+  <main id="view-geography" class="view-pane">
+    <div class="panel full-panel">
+      <div class="section-label" style="margin-bottom:14px;" data-i18n="sec_geo"></div>
+      <div class="scroll-hint" data-i18n="scroll_hint"></div>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th data-i18n="th_region"></th><th data-i18n="th_event"></th><th data-i18n="th_status"></th><th data-i18n="th_note"></th></tr></thead>
+          <tbody>
+            <tr><td><strong data-i18n="geo_r1"></strong></td><td data-i18n="geo_e1"></td><td><span class="badge-status high"><span class="dot"></span>High Attention</span></td><td data-i18n="geo_n1"></td></tr>
+            <tr><td><strong data-i18n="geo_r2"></strong></td><td data-i18n="geo_e2"></td><td><span class="badge-status monitor"><span class="dot"></span>Monitor</span></td><td data-i18n="geo_n2"></td></tr>
+            <tr><td><strong data-i18n="geo_r3"></strong></td><td data-i18n="geo_e3"></td><td><span class="badge-status monitor"><span class="dot"></span>Monitor</span></td><td data-i18n="geo_n3"></td></tr>
+            <tr><td><strong data-i18n="geo_r4"></strong></td><td data-i18n="geo_e4"></td><td><span class="badge-status monitor"><span class="dot"></span>Monitor</span></td><td data-i18n="geo_n4"></td></tr>
+            <tr><td><strong data-i18n="geo_r5"></strong></td><td data-i18n="geo_e5"></td><td><span class="badge-status monitor"><span class="dot"></span>Monitor</span></td><td data-i18n="geo_n5"></td></tr>
+            <tr><td><strong data-i18n="geo_r6"></strong></td><td data-i18n="geo_e6"></td><td><span class="badge-status monitor"><span class="dot"></span>Monitor</span></td><td data-i18n="geo_n6"></td></tr>
+            <tr><td><strong data-i18n="geo_r7"></strong></td><td data-i18n="geo_e7"></td><td><span class="badge-status background"><span class="dot"></span>Background</span></td><td data-i18n="geo_n7"></td></tr>
+            <tr><td><strong data-i18n="geo_r8"></strong></td><td data-i18n="geo_e8"></td><td><span class="badge-status background"><span class="dot"></span>Background</span></td><td data-i18n="geo_n8"></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <!-- VIEW 5: WATCHLIST -->
+  <main id="view-watchlist" class="view-pane">
+    <div class="section-label" style="margin-bottom:14px;" data-i18n="sec_watch"></div>
+    <div class="watch-grid">
+      <div class="watch-item">
+        <h4 data-i18n="w1_title"></h4>
+        <div class="watch-field"><span class="fl" data-i18n="lbl_wtw"></span><span class="fv" data-i18n="w1_wtw"></span></div>
+        <div class="watch-field"><span class="fl" data-i18n="lbl_dir"></span><span class="trend-tag stable" style="font-size:11px;" data-i18n="tag_active"></span></div>
+        <div class="watch-field"><span class="fl" data-i18n="lbl_trg"></span><span class="fv" data-i18n="w1_trg"></span></div>
+        <div class="watch-src"><a href="https://mediaindonesia.com/humaniora/930348/aktivitas-gunung-anak-krakatau-menurun-status-tetap-siaga-level-iii" target="_blank">Media Indonesia</a><span class="src-date">6 Sep 2026</span></div>
+      </div>
+      <div class="watch-item">
+        <h4 data-i18n="w2_title"></h4>
+        <div class="watch-field"><span class="fl" data-i18n="lbl_wtw"></span><span class="fv" data-i18n="w2_wtw"></span></div>
+        <div class="watch-field"><span class="fl" data-i18n="lbl_dir"></span><span class="trend-tag down" style="font-size:11px;" data-i18n="tag_down"></span></div>
+        <div class="watch-field"><span class="fl" data-i18n="lbl_trg"></span><span class="fv" data-i18n="w2_trg"></span></div>
+        <div class="watch-src"><a href="https://www.mediapelabuhannusantara.com/2026/09/urai-antrean-di-pelabuhan-ketapang-ksop.html" target="_blank">Media Pelabuhan Nusantara</a><span class="src-date">7 Sep 2026</span></div>
+      </div>
+      <div class="watch-item">
+        <h4 data-i18n="w3_title"></h4>
+        <div class="watch-field"><span class="fl" data-i18n="lbl_wtw"></span><span class="fv" data-i18n="w3_wtw"></span></div>
+        <div class="watch-field"><span class="fl" data-i18n="lbl_dir"></span><span class="trend-tag up" style="font-size:11px;" data-i18n="tag_up"></span></div>
+        <div class="watch-field"><span class="fl" data-i18n="lbl_trg"></span><span class="fv" data-i18n="w3_trg"></span></div>
+        <div class="watch-src"><a href="https://www.cnnindonesia.com/ekonomi/20260907104052-85-1400907/harga-minyak-naik-ke-us-96-imbas-as-iran-serang-kapal-di-selat-hormuz" target="_blank">CNN Indonesia</a><span class="src-date">7 Sep 2026</span></div>
+      </div>
+      <div class="watch-item">
+        <h4 data-i18n="w4_title"></h4>
+        <div class="watch-field"><span class="fl" data-i18n="lbl_wtw"></span><span class="fv" data-i18n="w4_wtw"></span></div>
+        <div class="watch-field"><span class="fl" data-i18n="lbl_dir"></span><span class="trend-tag uncertain" style="font-size:11px;" data-i18n="tag_uncertain"></span></div>
+        <div class="watch-field"><span class="fl" data-i18n="lbl_trg"></span><span class="fv" data-i18n="w4_trg"></span></div>
+        <div class="watch-src"><a href="https://ruminews.id/buruh-pelabuhan-perkuat-konsolidasi-nasional-presiden-didesak-respons-tuntutan-pekerja/" target="_blank">Ruminews</a><span class="src-date">3 Aug 2026</span></div>
+      </div>
+      <div class="watch-item">
+        <h4 data-i18n="w5_title"></h4>
+        <div class="watch-field"><span class="fl" data-i18n="lbl_wtw"></span><span class="fv" data-i18n="w5_wtw"></span></div>
+        <div class="watch-field"><span class="fl" data-i18n="lbl_dir"></span><span class="trend-tag down" style="font-size:11px;" data-i18n="tag_down"></span></div>
+        <div class="watch-field"><span class="fl" data-i18n="lbl_trg"></span><span class="fv" data-i18n="w5_trg"></span></div>
+        <div class="watch-src"><a href="https://www.fbinews.net/2026/09/gempa-susulan-flores-tembus-12968-kali.html" target="_blank">FBI News</a><span class="src-date">6 Sep 2026</span></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- VIEW 6: DEEP DIVE -->
   <main id="view-deepdive" class="view-pane">
     <div class="section-label" style="margin-bottom:14px;" data-i18n="sec_dd"></div>
 
